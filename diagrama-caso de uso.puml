@@ -1,0 +1,41 @@
+@startuml
+!define table(x) class x as "x" << (T,#FFAAAA) >>
+
+title DER - Controle de Domótica
+
+table(Cômodo) {
+  + id_comodo : int (PK)
+  nome : varchar
+  descricao : text
+}
+
+table(Dispositivo) {
+  + id_dispositivo : int (PK)
+  nome : varchar
+  tipo : varchar
+  estado : boolean
+  id_comodo : int (FK)
+}
+
+table(Cena) {
+  + id_cena : int (PK)
+  nome : varchar
+  descricao : text
+  ativa : boolean
+}
+
+table(AcaoCena) {
+  + id_acao : int (PK)
+  ordem : int
+  intervalo_segundos : int
+  acao : varchar
+  id_cena : int (FK)
+  id_dispositivo : int (FK)
+}
+
+' --- Relacionamentos ---
+Cômodo ||--o{ Dispositivo
+Cena ||--o{ AcaoCena
+Dispositivo ||--o{ AcaoCena
+
+@enduml
