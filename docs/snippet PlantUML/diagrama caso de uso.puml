@@ -1,0 +1,35 @@
+@startuml
+' --- Título ---
+title Diagrama de Casos de Uso - Controle de Domótica
+
+' --- Aparência ---
+skinparam {
+    Style strictuml
+    ActorBorderColor #2E86C1
+    UseCaseBorderColor #2E86C1
+    RectangleBorderColor #34495E
+    DefaultFontName "Segoe UI"
+}
+
+left to right direction
+
+' --- Ator ---
+actor "Usuário" as user
+
+' --- Casos de Uso ---
+rectangle "Sistema de Domótica" {
+  usecase "Gerenciar Cômodos" as UC1
+  usecase "Gerenciar Dispositivos" as UC2
+  usecase "Gerenciar Cenas" as UC3
+}
+
+' --- Relacionamentos ---
+user -- UC1
+user -- UC2
+user -- UC3
+
+UC1 <.. (Cadastrar, Visualizar, Editar, Excluir) : <<include>>
+UC2 <.. (Adicionar, Visualizar, Ligar/Desligar, Remover) : <<include>>
+UC3 <.. (Criar, Adicionar Ações, Visualizar, Ativar, Excluir) : <<include>>
+
+@enduml
