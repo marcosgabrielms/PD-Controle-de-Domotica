@@ -1,4 +1,4 @@
-@startuml
+@startuml DER - Controle de Domótica
 !define table(x) class x as "x" << (T,#FFAAAA) >>
 
 title DER - Controle de Domótica
