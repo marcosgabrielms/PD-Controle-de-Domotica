@@ -1,70 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF--8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G.I.A. Home - Automação Residencial</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 </head>
 <body>
-    <header>
-        <h1>G.I.A. Home</h1>
-    </header>
 
-    <main>
-        <section id="view-dashboard" class="view">
-            <div class="view-header">
-                <h2>Minha Casa</h2>
-                <button id="btn-show-add-comodo-modal"><i class="fas fa-plus"></i> Adicionar Cômodo</button>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-robot"></i> G.I.A. Home</h1>
             </div>
-            
-            <h3>Meus Cômodos</h3>
-            <div id="comodos-grid" class="grid-container"></div>
-
-            <hr>
-
-            <div class="view-header">
-                <h3>Minhas Cenas</h3>
-                <button id="btn-goto-scene-editor-new"><i class="fas fa-plus"></i> Criar Cena</button>
-            </div>
-            <div id="cenas-list"></div>
-        </section>
-
-        <section id="view-room-details" class="view hidden">
-            <div class="view-header">
-                <button class="btn-back-to-dashboard">&larr; Voltar ao Dashboard</button>
-                <h2 id="room-details-name"></h2>
-                <button id="btn-delete-room" class="btn-danger"><i class="fas fa-trash"></i> Excluir Cômodo</button>
-            </div>
-            <div class="view-header">
-                <h3>Dispositivos neste Cômodo</h3>
-                <button id="btn-show-add-device-modal"><i class="fas fa-plus"></i> Adicionar Dispositivo</button>
-            </div>
-            <div id="devices-grid" class="grid-container"></div>
-        </section>
-
-        <section id="view-scene-editor" class="view hidden">
-            <div class="view-header">
-                 <button class="btn-back-to-dashboard">&larr; Voltar ao Dashboard</button>
-                 <h2 id="scene-editor-title">Criar Nova Cena</h2>
-            </div>
-            <form id="form-scene" class="scene-editor-form">
-                <input type="hidden" id="input-scene-id">
-                <div class="form-group">
-                    <label for="input-scene-name">Nome da Cena</label>
-                    <input type="text" id="input-scene-name" placeholder="Ex: Noite de Cinema" required>
+            <ul class="sidebar-menu">
+                <li><a href="#" id="nav-dashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="login-control">
+                    <span>Status:</span>
+                    <span id="login-status-icon" class="status-icon logged-out" title="Você está deslogado."></span>
+                    <span id="login-status-text">Deslogado</span>
+                    <button id="btn-toggle-login">Login / Logout</button>
                 </div>
-                <div id="scene-actions-list" class="actions-list">
-                    <h3>Sequência de Ações</h3>
+            </div>
+        </nav>
+
+        <main class="content">
+            <section id="view-dashboard" class="view">
+                <div class="view-header">
+                    <h2>Minha Casa</h2>
+                    <button id="btn-show-add-comodo-modal" disabled title="Faça o login para adicionar um cômodo.">
+                        <i class="fas fa-plus"></i> Adicionar Cômodo
+                    </button>
                 </div>
-                <div class="editor-actions">
-                    <button type="button" id="btn-add-action"><i class="fas fa-plus"></i> Adicionar Ação</button>
-                    <button type="submit" id="btn-save-scene"><i class="fas fa-save"></i> Salvar Cena</button>
+                <h3>Meus Cômodos</h3>
+                <div id="comodos-grid" class="grid-container"></div>
+                <hr>
+                <div class="view-header">
+                    <h3>Minhas Cenas</h3>
+                    <button id="btn-goto-scene-editor-new" disabled title="Crie um cômodo e faça login para criar uma cena.">
+                        <i class="fas fa-plus"></i> Criar Cena
+                    </button>
                 </div>
-            </form>
-        </section>
-    </main>
+                <div id="cenas-list"></div>
+            </section>
+
+            <section id="view-room-details" class="view hidden">
+                <div class="view-header">
+                    <button class="btn-back-to-dashboard"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</button>
+                    <h2 id="room-details-name"></h2>
+                </div>
+                <div class="view-header">
+                    <h3>Dispositivos neste Cômodo</h3>
+                    <button id="btn-show-add-device-modal" disabled><i class="fas fa-plus"></i> Adicionar Dispositivo</button>
+                </div>
+                <div id="devices-grid" class="grid-container"></div>
+                <hr>
+                <div class="view-header">
+                    <h3>Cenas Relacionadas</h3>
+                    <button id="btn-create-scene-from-room"><i class="fas fa-plus"></i> Criar Cena</button>
+                </div>
+                <p class="subtitle">Mostrando cenas que controlam dispositivos neste cômodo.</p>
+                <div id="related-scenes-list"></div>
+            </section>
+
+            <section id="view-scene-editor" class="view hidden">
+                <div class="view-header">
+                    <button class="btn-back-to-dashboard"><i class="fas fa-arrow-left"></i> Voltar</button>
+                    <h2 id="scene-editor-title">Criar Nova Cena</h2>
+                </div>
+                <form id="form-scene" class="scene-editor-form">
+                    <input type="hidden" id="input-scene-id">
+                    <div class="form-group">
+                        <label for="input-scene-name">Nome da Cena</label>
+                        <input type="text" id="input-scene-name" placeholder="Ex: Noite de Cinema" required>
+                    </div>
+                    <div id="scene-actions-list" class="actions-list"><h3>Sequência de Ações</h3></div>
+                    <div class="editor-actions">
+                        <button type="button" id="btn-add-action"><i class="fas fa-plus"></i> Adicionar Ação</button>
+                        <button type="submit" id="btn-save-scene"><i class="fas fa-save"></i> Salvar Cena</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
 
     <div id="modal-backdrop" class="hidden">
         <div id="modal-comodo" class="modal hidden">
@@ -83,7 +104,7 @@
             <form id="form-device">
                 <input type="hidden" id="input-device-id">
                 <input type="text" id="input-device-name" placeholder="Ex: Lâmpada de Leitura" required>
-                 <div class="modal-actions">
+                <div class="modal-actions">
                     <button type="button" class="btn-cancel-modal">Cancelar</button>
                     <button type="submit">Salvar</button>
                 </div>
