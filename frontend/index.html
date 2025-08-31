@@ -9,6 +9,10 @@
 </head>
 <body>
 
+    <button id="sidebar-toggle" class="sidebar-toggle" title="Alternar menu" aria-label="Alternar menu">
+        <span class="hamburger-icon"></span>
+    </button>
+
     <div class="app-container">
         <nav class="sidebar">
             <div class="sidebar-header">
@@ -109,6 +113,17 @@
                     <button type="submit">Salvar</button>
                 </div>
             </form>
+        </div>
+
+        <div id="modal-confirmation" class="modal hidden">
+            <h3 id="confirmation-title">Confirmar Ação</h3>
+            <p id="confirmation-message" class="confirmation-text">
+                Sua mensagem de confirmação aparecerá aqui.
+            </p>
+            <div class="modal-actions">
+                <button type="button" id="btn-cancel-confirmation" class="btn-secondary">Cancelar</button>
+                <button type="button" id="btn-confirm-action" class="btn-danger">Confirmar</button>
+            </div>
         </div>
     </div>
     

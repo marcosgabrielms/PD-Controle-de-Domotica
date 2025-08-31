@@ -215,9 +215,325 @@ button:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.7; 
 .btn-icon:hover { color: var(--text-color); }
 .btn-icon.btn-danger:hover { color: var(--danger-color); }
 
+/*Sidebar animada*/
+
+.sidebar-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001; /* Garante que fique acima de tudo */
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background-color: var(--card-bg); 
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px var(--shadow-color);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    padding: 0;
+    transition: left 0.4s ease; 
+}
+
+.hamburger-icon {
+    position: relative;
+    width: 24px;
+    height: 2px;
+    background-color: var(--text-color);
+    transition: background-color 0.3s;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-color);
+    border-radius: 2px;
+    transition: transform 0.3s, top 0.3s;
+}
+
+.hamburger-icon::before { top: -7px; }
+.hamburger-icon::after { top: 7px; }
+
+
+
+/* Aplica transições suaves para a animação */
+.sidebar, .content, .sidebar-toggle {
+    transition: transform 0.4s ease, margin-left 0.4s ease, left 0.4s ease;
+}
+
+/* Garante a posição fixa e largura da sidebar */
+.sidebar {
+    width: 260px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Estado PADRÃO (menu fechado) */
+.sidebar {
+    transform: translateX(-100%); /* Esconde o menu para a esquerda */
+}
+
+.content {
+    width: 100%;
+    margin-left: 0;
+    /* Adiciona um padding para o conteúdo não ficar colado no botão */
+    padding-left: 80px; 
+}
+
+
+
+/* Animação do Hambúrguer para "X" */
+.app-container.sidebar-open .hamburger-icon {
+    background-color: transparent;
+}
+.app-container.sidebar-open .hamburger-icon::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+.app-container.sidebar-open .hamburger-icon::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+/* Move o botão junto com a sidebar para uma transição mais suave */
+.app-container.sidebar-open .sidebar-toggle {
+    left: 275px; /* 260px da sidebar + 15px de margem */
+}
+
+/* Traz a sidebar de volta para a tela */
+.app-container.sidebar-open .sidebar {
+    transform: translateX(0);
+}
+
+/* Empurra o conteúdo para a direita para dar espaço à sidebar */
+.app-container.sidebar-open .content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    padding-left: 2rem; /* Retorna ao padding original */
+}
+
+/*Estilização da página de ver cômodos*/
+
+.device-card-details {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.device-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.device-card-header .device-name {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--text-color);
+}
+
+.device-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.device-status {
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px; 
+    font-size: 0.8rem;
+    color: white;
+}
+
+.device-status.on {
+    background-color: var(--success-color);
+}
+
+.device-status.off {
+    background-color: #64748b; /* Cinza */
+}
+
+
+
+.empty-state-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+    color: #64748b;
+    margin-top: 1rem;
+}
+
+/*Melhorias na página de editar cenas*/
+
+.scene-editor-form {
+    max-width: 800px; /* Limita a largura do formulário para melhor legibilidade */
+    margin: 0 auto; /* Centraliza o formulário na página */
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.actions-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.actions-list-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.action-card {
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.action-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.action-card-body {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr; /* Divide os campos em 3 colunas */
+    gap: 1rem;
+    align-items: center;
+}
+
+.action-card-body .action-interval {
+    text-align: center;
+}
+
+/* Label para o campo de intervalo (atraso) */
+.action-card-body::before {
+    content: "Dispositivo";
+    grid-column: 1;
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+}
+.action-card-body::after {
+    content: "Atraso (s)";
+    grid-column: 3;
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+    text-align: center;
+}
+
+
+.editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
 /* --- MODAIS E FORMULÁRIOS --- */
-#modal-backdrop { z-index: 1000; }
-.modal { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+
+
+#modal-backdrop {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1010; 
+    
+    /* Centraliza o conteúdo (o modal) */
+    display: grid;
+    place-items: center;
+
+    /* Animação de fade-in */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Classe para mostrar o backdrop */
+#modal-backdrop:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Largura máxima do modal */
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    
+    /* Animação de entrada do modal */
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+#modal-backdrop:not(.hidden) .modal:not(.hidden) {
+    transform: scale(1);
+}
+
+.confirmation-text {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--content-bg);
+}
 /* Outros estilos de componentes como switch, forms, etc. permanecem similares */
 
 /* Demais estilos reaproveitados da versão anterior */
