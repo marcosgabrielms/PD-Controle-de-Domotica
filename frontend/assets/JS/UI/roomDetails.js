@@ -4,6 +4,21 @@ import api from '../api/index.js';
 import { showView } from './navigation.js';
 import { renderDashboard } from './dashboard.js';
 
+// Função auxiliar para escolher o ícone do dispositivo
+function getDeviceIcon(deviceName) {
+    const name = deviceName.toLowerCase();
+    if (name.includes('lâmpada') || name.includes('abajur')) {
+        return 'assets/imagens/lampada.png';
+    }
+    if (name.includes('ventilador de teto')) {
+        return 'assets/imagens/ventilador-de-teto.png';
+    }
+    if (name.includes('ventilador')) {
+        return 'assets/imagens/ventilador.png';
+    }
+    return 'assets/imagens/lampada.png';
+}
+
 export async function renderRoomDetails(comodoId, usuarioLogado) {
     const comodo = await api.getComodoById(comodoId);
     if (!comodo) {
@@ -20,8 +35,6 @@ export async function renderRoomDetails(comodoId, usuarioLogado) {
     if (devices.length === 0) {
         devicesGrid.innerHTML = `<div class="empty-state-message">Nenhum dispositivo neste cômodo ainda.</div>`;
     } else {
-        // --- ALTERAÇÃO AQUI ---
-        // Substituímos o status e o botão pelo novo switch
         devicesGrid.innerHTML = devices.map(device => `
             <div class="device-card-details">
                 <div class="device-card-header">
@@ -31,6 +44,9 @@ export async function renderRoomDetails(comodoId, usuarioLogado) {
                     </button>
                 </div>
                 <div class="device-card-body">
+                    <div class="device-icon-container ${device.estado ? 'on' : 'off'}">
+                        <img src="${getDeviceIcon(device.nome)}" alt="${device.nome}">
+                    </div>
                     <span class="device-status ${device.estado ? 'on' : 'off'}">${device.estado ? 'Ligado' : 'Desligado'}</span>
                     <label class="switch" title="${device.estado ? 'Desligar' : 'Ligar'}">
                         <input type="checkbox" class="toggle-device-switch" data-device-id="${device.id}" ${device.estado ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
