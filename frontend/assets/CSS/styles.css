@@ -296,26 +296,33 @@ button:disabled { background-color: #94a3b8; border-color: #94a3b8; cursor: not-
     display: flex;
     flex-direction: column;
 }
-.device-carousel-card .card-body { padding: 1rem; flex-grow: 1; }
+.device-carousel-card .card-body { 
+    padding: 1rem; 
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo do card do carrossel */
+}
 .device-carousel-card .card-title {
     font-size: 1.1rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    text-align: left;
+    text-align: center; /* Centraliza o título */
 }
 .device-carousel-card .info-row {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center; /* Centraliza a info do cômodo */
     align-items: center;
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
     gap: 5px;
+    width: 100%;
 }
 .device-carousel-card .card-actions {
     padding: 0.75rem 1rem;
     border-top: 1px solid var(--border-color);
     display: flex;
-    justify-content: flex-end;
+    justify-content: center; /* Centraliza o switch */
 }
 .device-status {
     font-weight: 500;
@@ -469,4 +476,40 @@ input, select { padding: 0.75rem; border: 1px solid var(--border-color); border-
 }
 .developer-links a:hover {
     color: var(--primary-color);
+}
+
+/* --- ESTILOS PARA ÍCONES DE DISPOSITIVO --- */
+.device-icon-container {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Deixa o fundo redondo */
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.device-icon-container img {
+    width: 32px; /* Ajuste o tamanho do ícone como preferir */
+    height: 32px;
+}
+
+/* Efeito para Dispositivo LIGADO */
+.device-icon-container.on {
+    background-color: rgba(40, 167, 69, 0.15); /* Fundo verde bem claro */
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.7); /* Efeito de brilho (glow) verde */
+}
+
+/* Efeito para Dispositivo DESLIGADO */
+.device-icon-container.off {
+    background-color: #e2e8f0; /* Fundo cinza */
+    box-shadow: none; /* Sem brilho */
+}
+
+/* Ajuste no card de detalhes do cômodo para incluir o ícone */
+.device-card-details .device-card-body {
+    flex-direction: column; /* Empilha o ícone, status e o switch */
+    align-items: center;
+    gap: 1rem;
 }
