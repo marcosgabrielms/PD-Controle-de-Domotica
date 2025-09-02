@@ -1,0 +1,50 @@
+@startuml Diagra de Classes - Controle Domótica
+' --- Título ---
+title Diagrama de Classes - Controle de Domótica
+
+' --- Aparência ---
+skinparam {
+    Style strictuml
+    ClassBorderColor #28a745
+    ClassBackgroundColor #f8f9fa
+    ArrowColor #343a40
+    DefaultFontName "Segoe UI"
+}
+
+' --- Classes ---
+class Comodo {
+  - id: int
+  - nome: String
+  + adicionarDispositivo(d: Dispositivo)
+  + removerDispositivo(id: int)
+}
+
+class Dispositivo {
+  - id: int
+  - nome: String
+  - estado: boolean
+  + ligar()
+  + desligar()
+}
+
+class Cena {
+  - id: int
+  - nome: String
+  - ativa: boolean
+  + adicionarAcao(a: Acao)
+  + executar()
+}
+
+class Acao {
+  - id: int
+  - ordem: int
+  - intervaloSegundos: int
+  - estadoDesejado: boolean
+}
+
+' --- Relacionamentos ---
+Comodo "1" -- "0..*" Dispositivo : contém >
+Cena "1" -- "1..*" Acao : é composta por >
+Acao "1" -- "1" Dispositivo : atua sobre >
+
+@enduml
