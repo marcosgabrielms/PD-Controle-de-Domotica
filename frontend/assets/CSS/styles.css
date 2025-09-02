@@ -473,6 +473,82 @@ button:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.7; 
     border-top: 1px solid var(--border-color);
 }
 
+/* Carrosel */
+/* ============================================= */
+/* === ESTILOS PARA O CARROSSEL DE DISPOSITIVOS === */
+/* ============================================= */
+
+.carousel-section {
+    margin-top: 2rem;
+}
+
+.carousel-section h3 {
+    margin-bottom: 1rem;
+}
+
+.carousel-container {
+    display: flex; /* Alinha os itens em linha */
+    gap: 1.5rem;   /* Espaçamento entre os cards */
+    overflow-x: auto; /* A MÁGICA: cria a barra de rolagem horizontal */
+    padding-bottom: 1.5rem; /* Espaço para a barra de rolagem não cortar os cards */
+    -webkit-overflow-scrolling: touch; /* Melhora a rolagem em dispositivos móveis */
+}
+
+/* Deixa a barra de rolagem mais bonita (opcional, mas recomendado) */
+.carousel-container::-webkit-scrollbar {
+    height: 8px;
+}
+.carousel-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+.carousel-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+.carousel-container::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+
+/* Card específico para o carrossel (menor e mais compacto) */
+.device-carousel-card {
+    flex: 0 0 220px; /* Impede que o card encolha e define uma largura fixa */
+    width: 220px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.device-carousel-card .card-body {
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.device-carousel-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.device-carousel-card .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.device-carousel-card .card-actions {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+}
+
 /* --- MODAIS E FORMULÁRIOS --- */
 
 

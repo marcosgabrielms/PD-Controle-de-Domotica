@@ -38,6 +38,16 @@ document.body.addEventListener('click', async (e) => {
     const target = e.target.closest('button, .card-link, input.toggle-scene-active');
     if (!target) return;
 
+    // Botão de ligar dos cartões de dispositivos na home 
+
+    if(target.matches('.btn-toggle-devices')) {
+        const deviceId = parseInt(target.dataset.deviceId);
+
+        await api.toggleDispositivoState(deviceId);
+
+        // 3. ATUALIZA A TELA ATUAL para refletir a mudança
+        refreshCurrentView(); 
+    }
     //  Ações Globais 
     if (target.matches('.btn-back-to-dashboard')) { renderDashboard(usuarioLogado); }
     if (target.matches('#btn-toggle-login')) { usuarioLogado = !usuarioLogado; renderDashboard(usuarioLogado); }

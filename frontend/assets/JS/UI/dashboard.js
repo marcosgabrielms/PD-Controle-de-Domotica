@@ -55,6 +55,48 @@ export async function renderDashboard(usuarioLogado) {
     const comodos = await api.getComodos();
     const cenas = await api.getCenas();
 
+    const todosComodos = await api.getComodos();
+    const todosDispositivos = await api.getAllDispositivos();
+
+    const carouselContainer = document.getElementById('dispositivos-carousel');
+
+    if (carouselContainer) {
+        carouselContainer.innerHTML = ''; // Limpa o carrossel
+
+        if (todosDispositivos.length === 0) {
+            carouselContainer.innerHTML = `<div class="empty-state-message">Nenhum dispositivo cadastrado.</div>`;
+        } else {
+            todosDispositivos.forEach(device => {
+                const comodo = todosComodos.find(c => c.id === device.comodo_id);
+                const nomeComodo = comodo ? comodo.nome : 'Não Alocado';
+
+                const card = document.createElement('div');
+                card.className = 'device-carousel-card';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${device.nome}</h5>
+                        <div class="info-row">
+                            <span>Cômodo:</span>
+                            <strong>${nomeComodo}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Status:</span>
+                            <span class="device-status ${device.estado ? 'on' : 'off'}">
+                                ${device.estado ? 'Ligado' : 'Desligado'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                         <button class="btn-toggle-device" data-device-id="${device.id}" ${!usuarioLogado ? 'disabled' : ''}>
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                    </div>
+                `;
+                carouselContainer.appendChild(card);
+            });
+        }
+    }
+
     // Limpa e renderiza os cards dos cômodos
     comodosGrid.innerHTML = '';
     comodos.forEach(comodo => {
@@ -75,6 +117,8 @@ export async function renderDashboard(usuarioLogado) {
         comodosGrid.appendChild(card);
     });
 
+    
+
     // Limpa e renderiza a lista de cenas
     cenasList.innerHTML = cenas.map(cena => `
         <div class="scene-item">
@@ -89,6 +133,9 @@ export async function renderDashboard(usuarioLogado) {
                 <button class="btn-icon btn-danger btn-delete-cena" data-scene-id="${cena.id}" title="Excluir Cena" aria-label="Excluir Cena"><i class="fas fa-trash"></i></button>
             </div>
         </div>`).join('');
+
+
+        
     
     // Atualiza os estados visuais da página (login, botões, etc)
     updateLoginUI(usuarioLogado);
