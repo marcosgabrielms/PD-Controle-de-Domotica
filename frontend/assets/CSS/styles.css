@@ -4,9 +4,6 @@
     --primary-hover-color: #0056b3;
     --danger-color: #dc3545;
     --success-color: #28a745;
-    --sidebar-bg: #1e293b;
-    --sidebar-text: #cbd5e1;
-    --sidebar-text-hover: #ffffff;
     --content-bg: #f8fafc;
     --card-bg: #ffffff;
     --text-color: #334155;
@@ -26,68 +23,98 @@ body {
     color: var(--text-color);
 }
 
-/* --- LAYOUT PRINCIPAL COM SIDEBAR --- */
-.app-container {
+/* --- LAYOUT PRINCIPAL E CABEÇALHO --- */
+.main-header {
+    background-color: var(--card-bg);
+    padding: 0 30px;
+    height: 70px;
     display: flex;
-}
-
-.sidebar {
-    width: 260px;
-    background-color: var(--sidebar-bg);
-    color: var(--sidebar-text);
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
     position: fixed;
-    left: 0;
     top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
-.sidebar-header {
-    padding: 1.5rem;
-    font-size: 1.25rem;
-    text-align: center;
-    border-bottom: 1px solid #334155;
-}
-.sidebar-header h1 {
+.header-logo h1 {
     font-size: 1.5rem;
-    color: white;
+    color: var(--text-color);
+    margin: 0;
 }
-.sidebar-header i {
+.header-logo i {
     margin-right: 0.5rem;
+    color: var(--primary-color);
 }
 
-.sidebar-menu {
-    list-style-type: none;
+.main-nav {
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
 }
-.sidebar-menu li a {
-    display: block;
-    padding: 1rem 1.5rem;
+
+.main-nav .nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 5px;
+    gap: 5px;
+}
+
+.nav-menu a {
     text-decoration: none;
-    color: var(--sidebar-text);
-    transition: background-color 0.2s, color 0.2s;
+    color: var(--text-color);
     font-weight: 500;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    white-space: nowrap;
 }
-.sidebar-menu li a:hover {
-    background-color: #334155;
-    color: var(--sidebar-text-hover);
+
+.nav-menu a:hover {
+    background-color: #e2e8f0;
 }
-.sidebar-menu li a.active {
+
+.nav-menu a.active {
     background-color: var(--primary-color);
     color: white;
 }
-.sidebar-menu li a i {
-    margin-right: 1rem;
-    width: 20px;
-    text-align: center;
+.nav-menu a.active:hover {
+    background-color: var(--primary-hover-color);
 }
 
-.sidebar-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #334155;
+.nav-item-hidden {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width 0.4s ease-in-out, opacity 0.2s ease-in;
+    padding: 0 !important;
+    margin: 0 !important;
 }
-.login-control {
+.nav-item-hidden a {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.nav-item-visible {
+    max-width: 200px;
+    opacity: 1;
+    transition: max-width 0.4s ease-in-out, opacity 0.5s ease-in-out 0.1s;
+}
+
+.header-user-actions .login-control {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -103,9 +130,8 @@ body {
 .status-icon.logged-in { background-color: var(--success-color); }
 
 .content {
-    margin-left: 260px;
     padding: 2rem;
-    width: calc(100% - 260px);
+    margin-top: 70px;
 }
 
 /* --- ESTILOS DO CONTEÚDO --- */
@@ -152,7 +178,6 @@ hr {
 .card-body { padding: 1.5rem; flex-grow: 1; }
 .card-title { font-weight: 600; margin: 0 0 1rem 0; font-size: 1.25rem; }
 
-/* NOVO: Botão dentro do card */
 .card-link {
     display: inline-flex;
     align-items: center;
@@ -171,7 +196,6 @@ hr {
     color: white;
     border-color: var(--primary-color);
 }
-
 .card-actions {
     display: flex;
     justify-content: flex-end;
@@ -180,8 +204,7 @@ hr {
     border-top: 1px solid var(--border-color);
 }
 
-/* --- COMPONENTES (Botões, Cenas, etc.) --- */
-.scene-item, .device-card {
+.scene-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -190,136 +213,136 @@ hr {
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
-.scene-item-name, .device-card-header span { font-weight: 500; }
-.scene-item-actions, .device-card-actions { display: flex; align-items: center; gap: 1rem; }
+.scene-item-name { font-weight: 500; }
+.scene-item-actions { display: flex; align-items: center; gap: 1rem; }
 
+/* --- COMPONENTES (BOTÕES, ETC.) --- */
 button {
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    background-color: var(--primary-color);
-    color: white;
     cursor: pointer;
     font-weight: 500;
     font-size: 0.9rem;
-    transition: background-color 0.2s, opacity 0.2s;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid transparent; /* Adicionado para consistência */
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    transition: background-color 0.2s, opacity 0.2s, color 0.2s, border-color 0.2s;
 }
-button:hover { background-color: var(--primary-hover-color); }
-button:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.7; }
 
-.btn-danger { background-color: var(--danger-color); }
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
+}
+
+.btn-danger { background-color: var(--danger-color); color: white; }
 .btn-icon { background: none; color: #64748b; padding: 0.5rem; border: none; }
 .btn-icon:hover { color: var(--text-color); }
 .btn-icon.btn-danger:hover { color: var(--danger-color); }
+button:disabled { background-color: #94a3b8; border-color: #94a3b8; cursor: not-allowed; opacity: 0.7; color: white; }
 
-/*Sidebar animada*/
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+.btn-secondary:hover {
+    background-color: var(--content-bg);
+}
 
-.sidebar-toggle {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1001; /* Garante que fique acima de tudo */
-    width: 50px;
-    height: 50px;
+/* --- CARROSSEL --- */
+.carousel-section { margin-top: 2rem; }
+.carousel-section h3 { margin-bottom: 1rem; }
+.carousel-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+}
+.carousel-container::-webkit-scrollbar { height: 8px; }
+.carousel-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.carousel-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+.carousel-container::-webkit-scrollbar-thumb:hover { background: #aaa; }
+.device-carousel-card {
+    flex: 0 0 220px;
+    width: 220px;
+    background-color: var(--card-bg);
     border-radius: 8px;
-    background-color: var(--card-bg); 
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+}
+.device-carousel-card .card-body { padding: 1rem; flex-grow: 1; }
+.device-carousel-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+.device-carousel-card .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+.device-carousel-card .card-actions {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+}
+.device-status {
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px; 
+    font-size: 0.8rem;
+    color: white;
+}
+.device-status.on { background-color: var(--success-color); }
+.device-status.off { background-color: #64748b; }
+.empty-state-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+    color: #64748b;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+/* --- EDITOR DE CENAS --- */
+.scene-editor-form {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 6px var(--shadow-color);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    padding: 0;
-    transition: left 0.4s ease; 
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+.action-card {
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
-.hamburger-icon {
-    position: relative;
-    width: 24px;
-    height: 2px;
-    background-color: var(--text-color);
-    transition: background-color 0.3s;
-}
-
-.hamburger-icon::before,
-.hamburger-icon::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--text-color);
-    border-radius: 2px;
-    transition: transform 0.3s, top 0.3s;
-}
-
-.hamburger-icon::before { top: -7px; }
-.hamburger-icon::after { top: 7px; }
-
-
-
-/* Aplica transições suaves para a animação */
-.sidebar, .content, .sidebar-toggle {
-    transition: transform 0.4s ease, margin-left 0.4s ease, left 0.4s ease;
-}
-
-/* Garante a posição fixa e largura da sidebar */
-.sidebar {
-    width: 260px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-}
-
-/* Estado PADRÃO (menu fechado) */
-.sidebar {
-    transform: translateX(-100%); /* Esconde o menu para a esquerda */
-}
-
-.content {
-    width: 100%;
-    margin-left: 0;
-    /* Adiciona um padding para o conteúdo não ficar colado no botão */
-    padding-left: 80px; 
-}
-
-
-
-/* Animação do Hambúrguer para "X" */
-.app-container.sidebar-open .hamburger-icon {
-    background-color: transparent;
-}
-.app-container.sidebar-open .hamburger-icon::before {
-    transform: rotate(45deg);
-    top: 0;
-}
-.app-container.sidebar-open .hamburger-icon::after {
-    transform: rotate(-45deg);
-    top: 0;
-}
-
-/* Move o botão junto com a sidebar para uma transição mais suave */
-.app-container.sidebar-open .sidebar-toggle {
-    left: 275px; /* 260px da sidebar + 15px de margem */
-}
-
-/* Traz a sidebar de volta para a tela */
-.app-container.sidebar-open .sidebar {
-    transform: translateX(0);
-}
-
-/* Empurra o conteúdo para a direita para dar espaço à sidebar */
-.app-container.sidebar-open .content {
-    margin-left: 260px;
-    width: calc(100% - 260px);
-    padding-left: 2rem; /* Retorna ao padding original */
-}
-
-/*Estilização da página de ver cômodos*/
-
+/* --- DETALHES DO CÔMODO --- */
 .device-card-details {
     background-color: var(--card-bg);
     border-radius: 8px;
@@ -352,274 +375,79 @@ button:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.7; 
     gap: 1rem;
 }
 
-.device-status {
-    font-weight: 500;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px; 
-    font-size: 0.8rem;
-    color: white;
-}
-
-.device-status.on {
-    background-color: var(--success-color);
-}
-
-.device-status.off {
-    background-color: #64748b; /* Cinza */
-}
-
-
-
-.empty-state-message {
-    text-align: center;
-    padding: 2rem;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    border: 1px dashed var(--border-color);
-    color: #64748b;
-    margin-top: 1rem;
-}
-
-/*Melhorias na página de editar cenas*/
-
-.scene-editor-form {
-    max-width: 800px; /* Limita a largura do formulário para melhor legibilidade */
-    margin: 0 auto; /* Centraliza o formulário na página */
-    background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 6px var(--shadow-color);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
-
-.actions-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.actions-list-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-}
-
-.action-card {
-    background-color: var(--content-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.action-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.action-card-body {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1fr; /* Divide os campos em 3 colunas */
-    gap: 1rem;
-    align-items: center;
-}
-
-.action-card-body .action-interval {
-    text-align: center;
-}
-
-/* Label para o campo de intervalo (atraso) */
-.action-card-body::before {
-    content: "Dispositivo";
-    grid-column: 1;
-    font-size: 0.8rem;
-    color: #64748b;
-    font-weight: 500;
-}
-.action-card-body::after {
-    content: "Atraso (s)";
-    grid-column: 3;
-    font-size: 0.8rem;
-    color: #64748b;
-    font-weight: 500;
-    text-align: center;
-}
-
-
-.editor-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-color);
-}
-
-/* Carrosel */
-/* ============================================= */
-/* === ESTILOS PARA O CARROSSEL DE DISPOSITIVOS === */
-/* ============================================= */
-
-.carousel-section {
-    margin-top: 2rem;
-}
-
-.carousel-section h3 {
-    margin-bottom: 1rem;
-}
-
-.carousel-container {
-    display: flex; /* Alinha os itens em linha */
-    gap: 1.5rem;   /* Espaçamento entre os cards */
-    overflow-x: auto; /* A MÁGICA: cria a barra de rolagem horizontal */
-    padding-bottom: 1.5rem; /* Espaço para a barra de rolagem não cortar os cards */
-    -webkit-overflow-scrolling: touch; /* Melhora a rolagem em dispositivos móveis */
-}
-
-/* Deixa a barra de rolagem mais bonita (opcional, mas recomendado) */
-.carousel-container::-webkit-scrollbar {
-    height: 8px;
-}
-.carousel-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-.carousel-container::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-}
-.carousel-container::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
-}
-
-
-/* Card específico para o carrossel (menor e mais compacto) */
-.device-carousel-card {
-    flex: 0 0 220px; /* Impede que o card encolha e define uma largura fixa */
-    width: 220px;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 2px 4px var(--shadow-color);
-    display: flex;
-    flex-direction: column;
-}
-
-.device-carousel-card .card-body {
-    padding: 1rem;
-    flex-grow: 1;
-}
-
-.device-carousel-card .card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem 0;
-}
-
-.device-carousel-card .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
-}
-
-.device-carousel-card .card-actions {
-    padding: 0.75rem 1rem;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: flex-end;
-}
-
 /* --- MODAIS E FORMULÁRIOS --- */
-
-
 #modal-backdrop {
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 1010; 
-    
-    /* Centraliza o conteúdo (o modal) */
     display: grid;
     place-items: center;
-
-    /* Animação de fade-in */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-
-/* Classe para mostrar o backdrop */
 #modal-backdrop:not(.hidden) {
     opacity: 1;
     visibility: visible;
 }
-
 .modal {
     background-color: white;
     padding: 2rem;
     border-radius: 8px;
     width: 90%;
-    max-width: 500px; /* Largura máxima do modal */
+    max-width: 500px;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-    
-    /* Animação de entrada do modal */
     transform: scale(0.95);
     transition: transform 0.3s ease;
 }
-
-#modal-backdrop:not(.hidden) .modal:not(.hidden) {
-    transform: scale(1);
-}
-
-.confirmation-text {
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: #64748b;
-    line-height: 1.5;
-}
-
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-}
-
-.btn-secondary:hover {
-    background-color: var(--content-bg);
-}
-/* Outros estilos de componentes como switch, forms, etc. permanecem similares */
-
-/* Demais estilos reaproveitados da versão anterior */
+#modal-backdrop:not(.hidden) .modal:not(.hidden) { transform: scale(1); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
 .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
 input:checked + .slider { background-color: var(--success-color); }
 input:checked + .slider:before { transform: translateX(20px); }
-.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.editor-actions { display: flex; justify-content: flex-end; gap: 1rem; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
 input, select { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 5px; font-size: 1rem; width: 100%; }
+
+/* --- MODAL 'SOBRE' --- */
+.developers-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.developer-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--content-bg);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.developer-info {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+.developer-card h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+.developer-card p {
+    margin: 0;
+    color: #64748b;
+}
+.developer-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    margin-left: 15px;
+    transition: color 0.2s;
+}
+.developer-links a:hover {
+    color: var(--primary-color);
+}
