@@ -9,6 +9,22 @@ import { comodosGrid,cenasList } from './dom.js';
  * @description Funções para renderizar e atualizar a view do Dashboard.
  */
 
+// Função auxiliar para escolher o ícone do dispositivo
+function getDeviceIcon(deviceName) {
+    const name = deviceName.toLowerCase();
+    if (name.includes('lâmpada') || name.includes('abajur')) {
+        return 'assets/imagens/lampada.png';
+    }
+    if (name.includes('ventilador de teto')) {
+        return 'assets/imagens/ventilador-de-teto.png';
+    }
+    if (name.includes('ventilador')) {
+        return 'assets/imagens/ventilador.png';
+    }
+    // Ícone padrão
+    return 'assets/imagens/lampada.png';
+}
+
 function updateLoginUI(usuarioLogado) {
     const loginStatusIcon = document.getElementById('login-status-icon');
     const loginStatusText = document.getElementById('login-status-text');
@@ -54,6 +70,9 @@ export async function renderDashboard(usuarioLogado) {
                 card.className = 'device-carousel-card';
                 card.innerHTML = `
                     <div class="card-body">
+                        <div class="device-icon-container ${device.estado ? 'on' : 'off'}">
+                            <img src="${getDeviceIcon(device.nome)}" alt="${device.nome}">
+                        </div>
                         <h5 class="card-title">${device.nome}</h5>
                         <div class="info-row">
                             <span>Cômodo:</span>
@@ -79,8 +98,6 @@ export async function renderDashboard(usuarioLogado) {
         comodos.forEach(comodo => {
             const card = document.createElement('div');
             card.className = 'card';
-            // --- ALTERAÇÃO FINAL AQUI ---
-            // As classes dos botões foram trocadas para .btn-primary
             card.innerHTML = `
                 <div class="card-body">
                     <h4 class="card-title">${comodo.nome}</h4>
