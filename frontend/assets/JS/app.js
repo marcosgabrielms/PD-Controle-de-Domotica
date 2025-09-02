@@ -10,18 +10,12 @@ import {
     showConfirmationModal
 } from './ui/index.js';
 
-//  ESTADO GLOBAL DO APP 
 let currentRoomId = null;
 let usuarioLogado = false;
 
-//  ELEMENTOS DO DOM 
 const formComodo = document.getElementById('form-comodo');
 const formDevice = document.getElementById('form-device');
 const formScene = document.getElementById('form-scene');
-
-//  MANIPULADORES DE EVENTOS 
-
-// --- LÓGICA PARA O MENU HORIZONTAL EXPAN_SÍVEL ---
 const menuToggle = document.getElementById('nav-menu-toggle');
 const navMenuContainer = document.getElementById('nav-menu-container');
 
@@ -29,18 +23,28 @@ if (menuToggle) {
     menuToggle.addEventListener('click', (e) => {
         e.preventDefault();
         const hiddenItems = navMenuContainer.querySelectorAll('.nav-item-hidden, .nav-item-visible');
-        hiddenItems.forEach(item => {
-            item.classList.toggle('nav-item-visible');
-        });
+        hiddenItems.forEach(item => item.classList.toggle('nav-item-visible'));
     });
 }
+
+// --- MUDANÇA NO EVENT LISTENER ---
+// Usamos um listener para 'change' e um para 'click' para cobrir tudo
+document.body.addEventListener('change', async (e) => {
+    const target = e.target;
+    if (!target) return;
+
+    // Novo handler para o toggle de dispositivo
+    if (target.matches('.toggle-device-switch')) {
+        await api.toggleDispositivoState(parseInt(target.dataset.deviceId));
+        refreshCurrentView();
+    }
+});
 
 
 document.body.addEventListener('click', async (e) => {
     const target = e.target.closest('button, a, .card-link, input.toggle-scene-active');
     if (!target) return;
 
-    // --- AÇÕES DO NOVO MENU ---
     if (target.matches('#nav-dashboard-link')) {
         e.preventDefault();
         renderDashboard(usuarioLogado);
@@ -51,20 +55,10 @@ document.body.addEventListener('click', async (e) => {
         showModal(modalAbout);
     }
 
-
-    // Botão de ligar dos cartões de dispositivos no carrossel do dashboard
-    if(target.matches('.device-carousel-card .btn-toggle-device')) {
-        const deviceId = parseInt(target.dataset.deviceId);
-        await api.toggleDispositivoState(deviceId);
-        refreshCurrentView(); 
-    }
-
-    //  Ações Globais 
     if (target.matches('.btn-back-to-dashboard')) { renderDashboard(usuarioLogado); }
     if (target.matches('#btn-toggle-login')) { usuarioLogado = !usuarioLogado; refreshCurrentView(); }
     if (target.matches('.btn-cancel-modal')) { hideModals(); }
 
-    //  Ações do Dashboard 
     if (target.matches('#btn-show-add-comodo-modal')) {
         formComodo.reset();
         document.getElementById('input-comodo-id').value = '';
@@ -104,16 +98,12 @@ document.body.addEventListener('click', async (e) => {
         renderDashboard(usuarioLogado);
     }
 
-    //  Ações da Tela de Detalhes do Cômodo 
     if (target.matches('#btn-create-scene-from-room')) {
         renderSceneEditor(null, currentRoomId, usuarioLogado);
     } else if (target.matches('#btn-show-add-device-modal')) {
         formDevice.reset();
         document.getElementById('modal-device-title').textContent = 'Adicionar Novo Dispositivo';
         showModal(document.getElementById('modal-device'));
-    } else if (target.matches('.device-card-details .btn-toggle-device')) {
-        await api.toggleDispositivoState(parseInt(target.dataset.deviceId));
-        refreshCurrentView();
     } else if (target.matches('.btn-delete-device')) {
         const confirmed = await showConfirmationModal("Certeza? Cenas que usam este dispositivo serão afetadas.");
         if (confirmed) {
@@ -123,7 +113,6 @@ document.body.addEventListener('click', async (e) => {
     }
 });
 
-//  EVENTOS DE SUBMISSÃO DE FORMULÁRIOS
 formComodo.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('input-comodo-id').value;
@@ -161,15 +150,12 @@ formScene.addEventListener('submit', async (e) => {
     renderDashboard(usuarioLogado);
 });
 
-
-// --- FUNÇÃO AUXILIAR PARA ATUALIZAR A TELA ---
 function refreshCurrentView() {
     const activeView = document.querySelector('.view:not(.hidden)');
     if (!activeView) {
         renderDashboard(usuarioLogado);
         return;
     }
-
     switch(activeView.id) {
         case 'view-dashboard':
             renderDashboard(usuarioLogado);
@@ -182,6 +168,4 @@ function refreshCurrentView() {
     }
 }
 
-
-// --- INICIALIZAÇÃO ---
 renderDashboard(usuarioLogado);
