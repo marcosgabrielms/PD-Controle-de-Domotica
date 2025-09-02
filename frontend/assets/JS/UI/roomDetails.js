@@ -3,26 +3,13 @@
 import api from '../api/index.js';
 import { showView } from './navigation.js';
 import { renderDashboard } from './dashboard.js';
-import { devicesGrid, roomDetailsName, relatedScenesList } from './dom.js';
-
-/**
- * @module RoomDetailsView
- * @description Função para renderizar a tela de detalhes de um cômodo.
- */
-
-/**
- * @description Busca os dados de um cômodo e seus dispositivos e renderiza a tela.
- * @param {number} comodoId - O ID do cômodo a ser exibido.
- * @param {boolean} usuarioLogado - O estado de login do usuário.
- */
 
 export async function renderRoomDetails(comodoId, usuarioLogado) {
     const comodo = await api.getComodoById(comodoId);
     if (!comodo) {
-        return renderDashboard(usuarioLogado); // Volta ao dashboard se o cômodo não existir
+        return renderDashboard(usuarioLogado);
     }
     
-    // Atualiza os títulos e botões da página
     document.getElementById('room-details-name').textContent = comodo.nome;
     document.getElementById('btn-show-add-device-modal').disabled = !usuarioLogado;
     document.getElementById('btn-create-scene-from-room').disabled = !usuarioLogado;
@@ -33,15 +20,22 @@ export async function renderRoomDetails(comodoId, usuarioLogado) {
     if (devices.length === 0) {
         devicesGrid.innerHTML = `<div class="empty-state-message">Nenhum dispositivo neste cômodo ainda.</div>`;
     } else {
+        // --- ALTERAÇÃO AQUI ---
+        // Substituímos o status e o botão pelo novo switch
         devicesGrid.innerHTML = devices.map(device => `
             <div class="device-card-details">
                 <div class="device-card-header">
                     <span class="device-name">${device.nome}</span>
-                    <button class="btn-icon btn-danger btn-delete-device" data-device-id="${device.id}" title="Excluir Dispositivo"><i class="fas fa-trash"></i></button>
+                    <button class="btn-icon btn-danger btn-delete-device" data-device-id="${device.id}" title="Excluir Dispositivo" ${!usuarioLogado ? 'disabled' : ''}>
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
                 <div class="device-card-body">
                     <span class="device-status ${device.estado ? 'on' : 'off'}">${device.estado ? 'Ligado' : 'Desligado'}</span>
-                    <button class="btn-toggle-device" data-device-id="${device.id}">${device.estado ? 'Desligar' : 'Ligar'}</button>
+                    <label class="switch" title="${device.estado ? 'Desligar' : 'Ligar'}">
+                        <input type="checkbox" class="toggle-device-switch" data-device-id="${device.id}" ${device.estado ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
         `).join('');
