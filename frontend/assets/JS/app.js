@@ -18,39 +18,50 @@ let usuarioLogado = false;
 const formComodo = document.getElementById('form-comodo');
 const formDevice = document.getElementById('form-device');
 const formScene = document.getElementById('form-scene');
-const sidebarToggle = document.getElementById('sidebar-toggle');
-const appContainer = document.querySelector('.app-container');
 
 //  MANIPULADORES DE EVENTOS 
 
-// Lógica para abrir/fechar a sidebar
-if (sidebarToggle && appContainer) {
-    sidebarToggle.addEventListener('click', () => {
-        appContainer.classList.toggle('sidebar-open');
+// --- LÓGICA PARA O MENU HORIZONTAL EXPAN_SÍVEL ---
+const menuToggle = document.getElementById('nav-menu-toggle');
+const navMenuContainer = document.getElementById('nav-menu-container');
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const hiddenItems = navMenuContainer.querySelectorAll('.nav-item-hidden, .nav-item-visible');
+        hiddenItems.forEach(item => {
+            item.classList.toggle('nav-item-visible');
+        });
     });
 }
 
-/**
- * Handler de eventos centralizado para todas as ações de clique na página.
- * Usa a técnica de "Delegação de Eventos".
- */
+
 document.body.addEventListener('click', async (e) => {
-    const target = e.target.closest('button, .card-link, input.toggle-scene-active');
+    const target = e.target.closest('button, a, .card-link, input.toggle-scene-active');
     if (!target) return;
 
-    // Botão de ligar dos cartões de dispositivos na home 
+    // --- AÇÕES DO NOVO MENU ---
+    if (target.matches('#nav-dashboard-link')) {
+        e.preventDefault();
+        renderDashboard(usuarioLogado);
+    }
+    if (target.matches('#nav-about')) {
+        e.preventDefault();
+        const modalAbout = document.getElementById('modal-about');
+        showModal(modalAbout);
+    }
 
-    if(target.matches('.btn-toggle-devices')) {
+
+    // Botão de ligar dos cartões de dispositivos no carrossel do dashboard
+    if(target.matches('.device-carousel-card .btn-toggle-device')) {
         const deviceId = parseInt(target.dataset.deviceId);
-
         await api.toggleDispositivoState(deviceId);
-
-        // 3. ATUALIZA A TELA ATUAL para refletir a mudança
         refreshCurrentView(); 
     }
+
     //  Ações Globais 
     if (target.matches('.btn-back-to-dashboard')) { renderDashboard(usuarioLogado); }
-    if (target.matches('#btn-toggle-login')) { usuarioLogado = !usuarioLogado; renderDashboard(usuarioLogado); }
+    if (target.matches('#btn-toggle-login')) { usuarioLogado = !usuarioLogado; refreshCurrentView(); }
     if (target.matches('.btn-cancel-modal')) { hideModals(); }
 
     //  Ações do Dashboard 
@@ -69,7 +80,6 @@ document.body.addEventListener('click', async (e) => {
         document.getElementById('modal-comodo-title').textContent = 'Editar Cômodo';
         showModal(document.getElementById('modal-comodo'));
     } else if (target.matches('.btn-delete-comodo')) {
-
         const confirmed = await showConfirmationModal("Certeza? Cenas associadas serão excluídas.");
         if (confirmed) {
             await api.deleteComodo(parseInt(target.dataset.comodoId));
@@ -80,7 +90,6 @@ document.body.addEventListener('click', async (e) => {
     } else if (target.matches('.btn-edit-cena')) {
         renderSceneEditor(parseInt(target.dataset.sceneId), null, usuarioLogado);
     } else if (target.matches('.btn-delete-cena')) {
-
         const confirmed = await showConfirmationModal("Tem certeza que deseja excluir esta cena?");
         if (confirmed) {
             await api.deleteScene(parseInt(target.dataset.sceneId));
@@ -89,6 +98,7 @@ document.body.addEventListener('click', async (e) => {
     } else if (target.matches('.btn-executar-cena')) {
         await api.executeScene(parseInt(target.dataset.sceneId));
         alert('Cena executada!');
+        refreshCurrentView();
     } else if (target.matches('.toggle-scene-active')) {
         await api.toggleSceneActiveState(parseInt(target.dataset.sceneId));
         renderDashboard(usuarioLogado);
@@ -101,20 +111,19 @@ document.body.addEventListener('click', async (e) => {
         formDevice.reset();
         document.getElementById('modal-device-title').textContent = 'Adicionar Novo Dispositivo';
         showModal(document.getElementById('modal-device'));
-    } else if (target.matches('.btn-toggle-device')) {
+    } else if (target.matches('.device-card-details .btn-toggle-device')) {
         await api.toggleDispositivoState(parseInt(target.dataset.deviceId));
-        renderRoomDetails(currentRoomId, usuarioLogado);
+        refreshCurrentView();
     } else if (target.matches('.btn-delete-device')) {
-
-        const confirmed = await showConfirmationModal("Certeza? Cenas que usam este dispositivo serão excluídas.");
+        const confirmed = await showConfirmationModal("Certeza? Cenas que usam este dispositivo serão afetadas.");
         if (confirmed) {
             await api.deleteDispositivo(parseInt(target.dataset.deviceId));
-            renderRoomDetails(currentRoomId, usuarioLogado);
+            refreshCurrentView();
         }
     }
 });
 
-//  EVENTOS DE SUBMISSÃO DE FORMULÁRIOS 
+//  EVENTOS DE SUBMISSÃO DE FORMULÁRIOS
 formComodo.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('input-comodo-id').value;
@@ -143,7 +152,7 @@ formScene.addEventListener('submit', async (e) => {
             ordem: index + 1,
             dispositivo_id: parseInt(card.querySelector('.action-device').value),
             acao_estado: card.querySelector('.action-state').value === 'true',
-            intervalo_segundos: parseInt(card.querySelector('.action-interval').value)
+            intervalo_segundos: parseInt(card.querySelector('.action-interval').value) || 0
         }))
     };
     if (!sceneData.nome) return alert("O nome da cena não pode ser vazio.");
@@ -151,6 +160,28 @@ formScene.addEventListener('submit', async (e) => {
     await api.saveScene(sceneData);
     renderDashboard(usuarioLogado);
 });
+
+
+// --- FUNÇÃO AUXILIAR PARA ATUALIZAR A TELA ---
+function refreshCurrentView() {
+    const activeView = document.querySelector('.view:not(.hidden)');
+    if (!activeView) {
+        renderDashboard(usuarioLogado);
+        return;
+    }
+
+    switch(activeView.id) {
+        case 'view-dashboard':
+            renderDashboard(usuarioLogado);
+            break;
+        case 'view-room-details':
+            renderRoomDetails(currentRoomId, usuarioLogado);
+            break;
+        default:
+            renderDashboard(usuarioLogado);
+    }
+}
+
 
 // --- INICIALIZAÇÃO ---
 renderDashboard(usuarioLogado);
