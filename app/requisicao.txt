@@ -1,0 +1,102 @@
+User 
+- Método: Criar usuário
+- Rotas: [POST] http://127.0.0.1:8000/users/
+- Inserção: {
+    "name": "Nome", 
+    "age": 0 } 
+
+- Método: Listar úsuarios
+- Rotas: [GET] http://127.0.0.1:8000/users/
+
+- Método: Pesquisar por ID
+- Rotas: [GET] http://127.0.0.1:8000/users/1/ (ID do usuário/user)
+
+- Método: Deletar úsuarios
+- Rotas: [DELETE] http://127.0.0.1:8000/users/1/ (ID do usuário/user)
+
+- Método: Atualizar o atributo nome ou idade do úsuario
+- Rotas: [PATCH] http://127.0.0.1:8000/users/1/ (ID do usuário/user)
+- Inserção: { "name": "Nome novo" }
+- Inserção: { "age": 1 }
+
+- Método: Atualizar o atributo nome e idade do úsuario
+- Rotas: [PUT] http://127.0.0.1:8000/users/1/ (ID do usuário/user)
+- Inserção: { 
+    "name": "Nome novo", 
+    "age": 1 }
+
+Devices:
+- Método: Criar dispostivo
+- Rotas: [POST] http://127.0.0.1:8000/rooms/
+- Inserção: { "name": "Nome do dispostivo" }
+
+- Método: Listar dispostivo
+- Rotas: [GET] http://127.0.0.1:8000/rooms/
+
+- Método: Listar dispostivo por ID
+- Rotas: [GET] http://127.0.0.1:8000/rooms/1 (ID do dispostivo/devices)
+
+- Método: Deletar dispostivo
+- Rotas: [DELETE] http://127.0.0.1:8000/rooms/1 (ID do dispostivo/devices)
+
+- Método: Ligar ou desligar o dispostivo
+- Rotas: [POST] http://127.0.0.1:8000/rooms/1/toggle (ID do dispostivo/devices)
+- Inserção: { "active": true }
+- Inserção: { "active": false }
+
+
+Rooms
+- Método: Criar cômodo
+- Rotas: [POST] http://127.0.0.1:8000/rooms/
+- Inserção: { "name": "Nome do cômodo" }
+
+- Método: Listar cômodo
+- Rotas: [GET] http://127.0.0.1:8000/rooms/
+
+- Método: Listar cômodo por ID
+- Rotas: [GET] http://127.0.0.1:8000/rooms/1/ (ID do cômodo/room)
+
+- Método: Adicionar um dispostivo já criado há um cômodo
+- Rotas: [POST] http://127.0.0.1:8000/rooms/1/devices (ID do cômodo/room)
+- Inserção: { "device_ids": [1]}
+- Inserção: { "device_ids": [2, 3]}
+
+- Método: Remover dispostivo do cômodo
+- Rotas: [DELETE] http://127.0.0.1:8000/rooms/1/devices (ID do cômodo/room)
+- Inserção: { "device_ids": [1]}
+- Inserção: { "device_ids": [2, 3]}
+
+- Método: Criar cena dentro de cômodo
+- Rotas: [POST] http://127.0.0.1:8000/rooms/1/scenes (ID do cômodo/room)
+- Inserção: {
+    "scene_name": "Cinema",
+    "device_ids": [1, 2],
+    "code_active": "Iniciar Cinema" }
+
+- Método: Atualizar nome do cômodo
+- Rotas: [POST] http://127.0.0.1:8000/rooms/1/ (ID do cômodo/room)
+- Inserção: { "name": "Novo nome do cômodo" }
+
+Scenes
+- Método: Listar todas as cenas 
+- Rotas: [GET] http://127.0.0.1:8000/scenes/ 
+
+- Método: Listar cenas por IDs 
+- Rotas: [GET] http://127.0.0.1:8000/scenes/2 (ID da cenas/scenes)
+
+- Método: Acionar uma cena 
+- Rotas: [POST] http://127.0.0.1:8000/scenes/2/activate (ID do cômodo/room)
+- Inserção: { "code_active": "Hora do filme" }
+
+- Método: Desativar uma cena
+- Rotas: [POST] http://127.0.0.1:8000/scenes/2/deactivate (ID do cômodo/room)
+- Inserção: { "scene_id": 2 }
+
+- Método: Adicionar dispostivo
+- Rotas: [POST] http://127.0.0.1:8000/scenes/2/devices (ID do cômodo/room)
+- Inserção: { "device_ids": [3] }
+
+- Método: Deletar dispostivo
+- Rotas: [DELETE] http://127.0.0.1:8000/scenes/2/devices (ID do cômodo/room)
+- Inserção: { "device_ids": [1] }
+- Ele deleta normalmente, mas a cena permanece no rooms
