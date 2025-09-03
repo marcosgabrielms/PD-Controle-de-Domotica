@@ -1,50 +1,76 @@
-@startuml Diagra de Classes - Controle Domótica
-' --- Título ---
-title Diagrama de Classes - Controle de Domótica
+@startuml Diagrama de Classes - Simples e Limpo
 
-' --- Aparência ---
-skinparam {
-    Style strictuml
-    ClassBorderColor #28a745
-    ClassBackgroundColor #f8f9fa
-    ArrowColor #343a40
-    DefaultFontName "Segoe UI"
+' --- Classes de Modelo (Entidades) ---
+class User {
+  -id: int
+  -name: String
+  -age: int
 }
 
-' --- Classes ---
-class Comodo {
-  - id: int
-  - nome: String
-  + adicionarDispositivo(d: Dispositivo)
-  + removerDispositivo(id: int)
+class Room {
+  -id: int
+  -name: String
 }
 
-class Dispositivo {
-  - id: int
-  - nome: String
-  - estado: boolean
-  + ligar()
-  + desligar()
+class Device {
+  -id: int
+  -name: String
+  -active: boolean
 }
 
-class Cena {
-  - id: int
-  - nome: String
-  - ativa: boolean
-  + adicionarAcao(a: Acao)
-  + executar()
+class Scene {
+  -id: int
+  -name: String
+  -code_active: String
+  -active: boolean
 }
 
-class Acao {
-  - id: int
-  - ordem: int
-  - intervaloSegundos: int
-  - estadoDesejado: boolean
+' --- Classes de Serviço (Lógica de Negócio) ---
+class UserService {
+  +createUser(name, age, db)
+  +getUser(user_id, db)
+  +listUsers(db)
+  +deleteUser(user_id, db)
+  +updateUser(user_id, data, db)
 }
 
-' --- Relacionamentos ---
-Comodo "1" -- "0..*" Dispositivo : contém >
-Cena "1" -- "1..*" Acao : é composta por >
-Acao "1" -- "1" Dispositivo : atua sobre >
+class RoomService {
+  +create_room(name, db)
+  +update_room_name(room_id, new_name, db)
+  +delete_room(room_id, db)
+  +list_rooms(db)
+  +get_room(room_id, db)
+  +add_devices_to_room(room, device_ids, db)
+  +remove_devices_from_room(room, device_ids, db)
+}
+
+class DeviceService {
+  +create_device(name, room_id, db)
+  +get_device(device_id, db)
+  +list_devices(db)
+  +toggle_device(device_id, active, db)
+  +delete_device(device_id, db)
+}
+
+class SceneService {
+  +create_scene(db, room, scene_create)
+  +add_devices_to_scene(scene, device_ids, db)
+  +remove_devices_from_scene(scene, device_ids, db)
+  +activate_scene(scene_id, db)
+  +deactivate_scene(scene_id, db)
+  +get_scene(scene_id, db)
+  +list_scenes(db)
+}
+
+' --- Relacionamentos entre Entidades ---
+Room "1" -- "0..*" Device : contém
+Room "1" -- "0..*" Scene : contém
+Scene "1" -- "0..*" Device : controla
+
+' --- Relacionamentos de Dependência ---
+UserService ..> User
+RoomService ..> Room
+DeviceService ..> Device
+SceneService ..> Scene
 
 @enduml
