@@ -25,11 +25,11 @@ export async function renderRoomDetails(comodoId, usuarioLogado) {
         return renderDashboard(usuarioLogado);
     }
     
-    document.getElementById('room-details-name').textContent = comodo.nome;
-    document.getElementById('btn-show-add-device-modal').disabled = !usuarioLogado;
+    document.getElementById('room-details-name').textContent = comodo.name;
+    document.getElementById('btn-show-link-device-modal').disabled = !usuarioLogado;
     document.getElementById('btn-create-scene-from-room').disabled = !usuarioLogado;
 
-    const devices = await api.getDispositivosByComodoId(comodoId);
+    const devices = comodo.devices || []; 
     const devicesGrid = document.getElementById('devices-grid');
     
     if (devices.length === 0) {
@@ -38,18 +38,18 @@ export async function renderRoomDetails(comodoId, usuarioLogado) {
         devicesGrid.innerHTML = devices.map(device => `
             <div class="device-card-details">
                 <div class="device-card-header">
-                    <span class="device-name">${device.nome}</span>
+                    <span class="device-name">${device.name}</span>
                     <button class="btn-icon btn-danger btn-delete-device" data-device-id="${device.id}" title="Excluir Dispositivo" ${!usuarioLogado ? 'disabled' : ''}>
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
                 <div class="device-card-body">
                     <div class="device-icon-container ${device.estado ? 'on' : 'off'}">
-                        <img src="${getDeviceIcon(device.nome)}" alt="${device.nome}">
+                        <img src="${getDeviceIcon(device.name)}" alt="${device.name}">
                     </div>
-                    <span class="device-status ${device.estado ? 'on' : 'off'}">${device.estado ? 'Ligado' : 'Desligado'}</span>
-                    <label class="switch" title="${device.estado ? 'Desligar' : 'Ligar'}">
-                        <input type="checkbox" class="toggle-device-switch" data-device-id="${device.id}" ${device.estado ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
+                    <span class="device-status ${device.active ? 'on' : 'off'}">${device.active ? 'Ligado' : 'Desligado'}</span>
+                    <label class="switch" title="${device.active ? 'Desligar' : 'Ligar'}">
+                        <input type="checkbox" class="toggle-device-switch" data-device-id="${device.id}" ${device.active ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -58,8 +58,11 @@ export async function renderRoomDetails(comodoId, usuarioLogado) {
     }
     
     const allScenes = await api.getCenas();
-    const deviceIdsInRoom = devices.map(d => d.id);
-    const relatedScenes = allScenes.filter(scene => scene.acoes.some(acao => deviceIdsInRoom.includes(acao.dispositivo_id)));
+    const deviceIdsInRoom = (comodo.devices || []).map(d => d.id);
+    const relatedScenes = allScenes.filter(scene => 
+        scene.acoes && Array.isArray(scene.acoes) && scene.acoes.some(acao => deviceIdsInRoom.includes(acao.dispositivo_id))
+    );    
+    
     const relatedScenesList = document.getElementById('related-scenes-list');
     
     if (relatedScenes.length === 0) {
@@ -67,11 +70,34 @@ export async function renderRoomDetails(comodoId, usuarioLogado) {
     } else {
         relatedScenesList.innerHTML = relatedScenes.map(cena => `
             <div class="scene-item">
-                <span class="scene-item-name">${cena.nome}</span>
-                <span class="device-status ${cena.ativo ? 'on' : 'off'}">${cena.ativo ? 'Ativa' : 'Inativa'}</span>
+                <span class="scene-item-name">${cena.name}</span>
+                <span class="device-status ${cena.active ? 'on' : 'off'}">${cena.active ? 'Ativa' : 'Inativa'}</span>
             </div>
         `).join('');
     }
     
     showView('roomDetails');
+}
+
+export async function renderAddDeviceToRoomModal(roomId) {
+    const todosDispositivos = await api.getAllDispositivos();
+    // Filtra apenas os dispositivos que não têm cômodo (room_id é null ou undefined)
+    const unallocatedDevices = todosDispositivos.filter(d => !d.room_id);
+    
+    const container = document.getElementById('unallocated-devices-list');
+    container.innerHTML = ''; 
+
+    if (unallocatedDevices.length === 0) {
+        container.innerHTML = '<p>Nenhum dispositivo não alocado disponível para vincular.</p>';
+    } else {
+        unallocatedDevices.forEach(device => {
+            container.innerHTML += `
+                <div class="checkbox-item">
+                    <input type="checkbox" id="device-link-${device.id}" value="${device.id}">
+                    <label for="device-link-${device.id}">${device.name}</label>
+                </div>
+            `;
+        });
+    }
+    showModal(document.getElementById('modal-add-device-to-room'));
 }

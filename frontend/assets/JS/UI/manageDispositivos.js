@@ -12,7 +12,6 @@ import { dispositivosGridManage } from './dom.js';
 export async function renderManageDispositivos(usuarioLogado) {
     console.log("1. Iniciando renderManageDispositivos..."); 
 
-    // 1. Busca todos os dados necessários da API
     const todosDispositivos = await api.getAllDispositivos();
     const todosComodos = await api.getComodos();
 
@@ -28,7 +27,7 @@ export async function renderManageDispositivos(usuarioLogado) {
 
     dispositivosGridManage.innerHTML = ''; // Limpa a grid antes de desenhar
 
-    // 2. Cria os cards para cada dispositivo
+    // Cria os cards para cada dispositivo
     if (todosDispositivos.length === 0) {
         dispositivosGridManage.innerHTML = `<div class="empty-state-message">Nenhum dispositivo conectado ao sistema ainda.</div>`;
     } else {
@@ -37,7 +36,7 @@ export async function renderManageDispositivos(usuarioLogado) {
             const nomeComodo = comodo ? comodo.nome : 'Não Alocado';
             
             const card = document.createElement('div');
-            card.className = 'device-manage-card'; // Classe para o novo estilo de card
+            card.className = 'device-manage-card'; 
             
             card.innerHTML = `
                 <div class="device-manage-card-header">
@@ -70,6 +69,5 @@ export async function renderManageDispositivos(usuarioLogado) {
         });
     }
     
-    // 3. Mostra a view correta
     showView('manage-dispositivos');
 }

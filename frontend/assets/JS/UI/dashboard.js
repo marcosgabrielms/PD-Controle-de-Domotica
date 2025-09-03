@@ -55,7 +55,10 @@ export async function renderDashboard(usuarioLogado) {
     const comodos = await api.getComodos();
     const cenas = await api.getCenas();
     const todosDispositivos = await api.getAllDispositivos();
+    
+    const comodosGrid = document.getElementById('comodos-grid');
     const carouselContainer = document.getElementById('dispositivos-carousel');
+    const cenasList = document.getElementById('cenas-list');
 
     if (carouselContainer) {
         carouselContainer.innerHTML = ''; 
@@ -64,24 +67,20 @@ export async function renderDashboard(usuarioLogado) {
             carouselContainer.innerHTML = `<div class="empty-state-message">Nenhum dispositivo cadastrado.</div>`;
         } else {
             todosDispositivos.forEach(device => {
-                const comodo = comodos.find(c => c.id === device.comodo_id);
-                const nomeComodo = comodo ? comodo.nome : 'Não Alocado';
+                
                 const card = document.createElement('div');
                 card.className = 'device-carousel-card';
+                
                 card.innerHTML = `
                     <div class="card-body">
-                        <div class="device-icon-container ${device.estado ? 'on' : 'off'}">
-                            <img src="${getDeviceIcon(device.nome)}" alt="${device.nome}">
+                        <div class="device-icon-container ${device.active ? 'on' : 'off'}">
+                            <img src="${getDeviceIcon(device.name)}" alt="${device.name}">
                         </div>
-                        <h5 class="card-title">${device.nome}</h5>
-                        <div class="info-row">
-                            <span>Cômodo:</span>
-                            <strong>${nomeComodo}</strong>
+                        <h5 class="card-title">${device.name}</h5>
                         </div>
-                    </div>
                     <div class="card-actions">
-                         <label class="switch" title="${device.estado ? 'Desligar' : 'Ligar'}">
-                            <input type="checkbox" class="toggle-device-switch" data-device-id="${device.id}" ${device.estado ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
+                         <label class="switch" title="${device.active ? 'Desligar' : 'Ligar'}">
+                            <input type="checkbox" class="toggle-device-switch" data-device-id="${device.id}" ${device.active ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -100,7 +99,7 @@ export async function renderDashboard(usuarioLogado) {
             card.className = 'card';
             card.innerHTML = `
                 <div class="card-body">
-                    <h4 class="card-title">${comodo.nome}</h4>
+                    <h4 class="card-title">${comodo.name}</h4>
                     <div class="card-link" data-comodo-id="${comodo.id}" title="Ver detalhes de ${comodo.nome}">
                         <span>Gerenciar Dispositivos</span>
                         <i class="fas fa-chevron-right"></i>
@@ -115,22 +114,24 @@ export async function renderDashboard(usuarioLogado) {
     }
 
     cenasList.innerHTML = '';
-    if (cenas.length === 0) {
-        cenasList.innerHTML = `<div class="empty-state-message">Nenhuma cena criada.</div>`;
-    } else {
-        cenasList.innerHTML = cenas.map(cena => `
-            <div class="scene-item">
-                <span class="scene-item-name">${cena.nome}</span>
-                <div class="scene-item-actions">
-                    <label class="switch" title="${cena.ativo ? 'Desativar' : 'Ativar'} cena">
-                        <input type="checkbox" class="toggle-scene-active" data-scene-id="${cena.id}" ${cena.ativo ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
-                        <span class="slider"></span>
-                    </label>
-                    <button class="btn-primary btn-executar-cena" data-scene-id="${cena.id}" ${!cena.ativo || !usuarioLogado ? 'disabled' : ''}><i class="fas fa-play"></i> Executar</button>
-                    <button class="btn-icon btn-edit-cena" data-scene-id="${cena.id}" title="Editar Cena" aria-label="Editar Cena" ${!usuarioLogado ? 'disabled' : ''}><i class="fas fa-pencil-alt"></i></button>
-                    <button class="btn-icon btn-danger btn-delete-cena" data-scene-id="${cena.id}" title="Excluir Cena" aria-label="Excluir Cena" ${!usuarioLogado ? 'disabled' : ''}><i class="fas fa-trash"></i></button>
-                </div>
-            </div>`).join('');
+    if (cenasList) {
+        if (cenas.length === 0) {
+            cenasList.innerHTML = `<div class="empty-state-message">Nenhuma cena criada.</div>`;
+        } else {
+            cenasList.innerHTML = cenas.map(cena => `
+                <div class="scene-item">
+                    <span class="scene-item-name">${cena.name}</span>
+                    <div class="scene-item-actions">
+                        <label class="switch" title="${cena.active ? 'Desativar' : 'Ativar'} cena">
+                            <input type="checkbox" class="toggle-scene-active" data-scene-id="${cena.id}" data-current-state="${cena.active}" ${cena.active ? 'checked' : ''} ${!usuarioLogado ? 'disabled' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                        <button class="btn-primary btn-executar-cena" data-scene-id="${cena.id}" ${!cena.active || !usuarioLogado ? 'disabled' : ''}><i class="fas fa-play"></i> Executar</button>
+                        <button class="btn-icon btn-edit-cena" data-scene-id="${cena.id}" title="Editar Cena" aria-label="Editar Cena" ${!usuarioLogado ? 'disabled' : ''}><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-icon btn-danger btn-delete-cena" data-scene-id="${cena.id}" title="Excluir Cena" aria-label="Excluir Cena" ${!usuarioLogado ? 'disabled' : ''}><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`).join('');
+        }
     }
         
     updateLoginUI(usuarioLogado);

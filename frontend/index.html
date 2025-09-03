@@ -43,6 +43,7 @@
                 <div id="comodos-grid" class="grid-container"></div>
                 <div class="carousel-section">
                     <h3>Todos os Dispositivos</h3>
+                    <button id="btn-show-add-device-modal" class="btn-primary" disabled><i class="fas fa-plus"></i> Adicionar Dispositivo</button>
                     <div id="dispositivos-carousel" class="carousel-container">
                     </div>
                 </div>
@@ -63,7 +64,7 @@
                 </div>
                 <div class="view-header">
                     <h3>Dispositivos neste Cômodo</h3>
-                    <button id="btn-show-add-device-modal" class="btn-primary" disabled><i class="fas fa-plus"></i> Adicionar Dispositivo</button>
+                    <button id="btn-show-link-device-modal" class="btn-primary" disabled><i class="fas fa-plus"></i> Vincular Dispositivo</button>
                 </div>
                 <div id="devices-grid" class="grid-container"></div>
                 <hr>
@@ -97,6 +98,7 @@
     </div>
 
     <div id="modal-backdrop" class="hidden">
+        
         <div id="modal-comodo" class="modal hidden">
             <h3 id="modal-comodo-title">Adicionar Novo Cômodo</h3>
             <form id="form-comodo">
@@ -105,6 +107,48 @@
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary btn-cancel-modal">Cancelar</button>
                     <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="modal-create-scene" class="modal hidden">
+            <h3>Criar Nova Cena</h3>
+            <form id="form-create-scene">
+                <div class="form-group">
+                    <label for="input-scene-name-modal">Nome da Cena</label>
+                    <input type="text" id="input-scene-name-modal" placeholder="Ex: Luzes de Leitura" required>
+                </div>
+                <div class="form-group">
+                    <label for="input-scene-code-modal">Código de Ativação</label>
+                    <input type="text" id="input-scene-code-modal" placeholder="Ex: 1234" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Incluir Dispositivos do Cômodo</label>
+                    <div id="scene-devices-list-modal" class="relocacao-list">
+                        </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel-modal btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Cena</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="modal-add-device-to-room" class="modal hidden">
+            <h3>Vincular Dispositivos ao Cômodo</h3>
+            <form id="form-add-device-to-room">
+                <p class="confirmation-text">
+                    Selecione os dispositivos não alocados que você deseja adicionar a este cômodo.
+                </p>
+                
+                <div id="unallocated-devices-list" class="relocacao-list">
+                    </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel-modal btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Vincular Selecionados</button>
                 </div>
             </form>
         </div>
@@ -166,6 +210,11 @@
                 <button type="button" class="btn-primary btn-cancel-modal">Fechar</button>
             </div>
         </div>
+    </div>
+
+    <div id="toast-notification" class="toast hidden">
+        <i id="toast-icon" class="fas fa-check-circle"></i>
+        <span id="toast-message"></span>
     </div>
     
     <script src="assets/js/app.js" type="module"></script>

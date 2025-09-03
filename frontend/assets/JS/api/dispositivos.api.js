@@ -1,52 +1,46 @@
 // assets/js/api/dispositivos.api.js
 
-import { data, nextId } from './store.js';
+const API_URL = "http://127.0.0.1:8000";
 
 export const dispositivosApi = {
-    /**
-     * @description Busca todos os dispositivos cadastrados no sistema.
-     * @returns Um array contendo todo os dispositivos 
-     */
-    async getAllDispositivos() { return structuredClone(data.dispositivos); },
-
-    /**
-     * @description Busca todos os dispositivos pertencentes a um cômodo específico.
-     * @param {number} comodoId O ID do cômodo.
-     * @returns {Array} Um array com os dispositivos do cômodo.
-     */
-    async getDispositivosByComodoId(comodoId) { return data.dispositivos.filter(d => d.comodo_id === comodoId); },
-
-    /**
-     * @description Cria um novo dispositivo e o associa a um cômodo.
-     * @param {string} nome O nome do novo dispositivo.
-     * @param {number} comodo_id O ID do cômodo ao qual o dispositivo pertencerá.
-     * @returns {Promise<object>} Uma promessa que resolve para o objeto do dispositivo recém-criado.
-     */
-    async createDispositivo(nome, comodo_id) {
-        const n = { id: nextId.dispositivo++, comodo_id, nome, estado: false };
-        data.dispositivos.push(n);
-        return n;
+    async getAllDispositivos() {
+        const response = await fetch(`${API_URL}/devices`);
+        return await response.json();
+    },
+    
+    async createDispositivo(nome) {
+    const response = await fetch(`${API_URL}/devices`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: nome })
+    });
+        return await response.json();
     },
 
-    /**
-     * @description Inverte o estado (liga/desliga) de um dispositivo.
-     * @param {number} id O ID do dispositivo a ser alterado.
-     * @returns {Promise<object|undefined>} Uma promessa que resolve para o objeto do dispositivo com seu novo estado.
-     */
+
+    async addDevicesToRoom(roomId, deviceIds) {
+    const response = await fetch(`${API_URL}/rooms/${roomId}/devices`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_ids: deviceIds }) 
+    });
+        return await response.json();
+    },
+
     async toggleDispositivoState(id) {
-        const d = data.dispositivos.find(d => d.id === id);
-        if (d) d.estado = !d.estado;
-        return d;
+        const deviceResponse = await fetch(`${API_URL}/devices/${id}`);
+        const device = await deviceResponse.json();
+        
+        const response = await fetch(`${API_URL}/devices/${id}/toggle`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ active: !device.active }) 
+        });
+        return await response.json();
     },
-
-    /**
-     * @description Exclui um dispositivo e todas as cenas que o utilizavam.
-     * @param {number} id O ID do dispositivo a ser excluído.
-     * @returns {Boolean} Um parâmetro booleano
-     */
+    
     async deleteDispositivo(id) {
-        data.cenas = data.cenas.filter(cena => !cena.acoes.some(acao => acao.dispositivo_id === id));
-        data.dispositivos = data.dispositivos.filter(d => d.id !== id);
+        await fetch(`${API_URL}/devices/${id}`, { method: 'DELETE' });
         return { success: true };
     },
 };
