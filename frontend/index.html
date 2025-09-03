@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L.E.M. Home - Automação Residencial</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-logo">
+            <h1><i class="fas fa-robot"></i> L.E.M. Home</h1>
+        </div>
+        <nav class="main-nav">
+            <ul class="nav-menu" id="nav-menu-container">
+                <li><a href="#" id="nav-menu-toggle" class="active"><i class="fas fa-bars"></i> Menu</a></li>
+                <li class="nav-item-hidden"><a href="#" id="nav-dashboard-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="nav-item-hidden"><a href="#" id="nav-about"><i class="fas fa-info-circle"></i> Sobre</a></li>
+            </ul>
+        </nav>
+        <div class="header-user-actions">
+            <div class="login-control">
+                <span>Status:</span>
+                <span id="login-status-icon" class="status-icon logged-out" title="Você está deslogado."></span>
+                <span id="login-status-text">Deslogado</span>
+                <button id="btn-toggle-login" class="btn-primary">Login / Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <main class="content">
+            <section id="view-dashboard" class="view">
+                <div class="view-header">
+                    <h2>Minha Casa</h2>
+                    <button id="btn-show-add-comodo-modal" class="btn-primary" disabled title="Faça o login para adicionar um cômodo.">
+                        <i class="fas fa-plus"></i> Adicionar Cômodo
+                    </button>
+                </div>
+                <h3>Meus Cômodos</h3>
+                <div id="comodos-grid" class="grid-container"></div>
+                <div class="carousel-section">
+                    <h3>Todos os Dispositivos</h3>
+                    <button id="btn-show-add-device-modal" class="btn-primary" disabled><i class="fas fa-plus"></i> Adicionar Dispositivo</button>
+                    <div id="dispositivos-carousel" class="carousel-container">
+                    </div>
+                </div>
+                <hr>
+                <div class="view-header">
+                    <h3>Minhas Cenas</h3>
+                    <button id="btn-goto-scene-editor-new" class="btn-primary" disabled title="Crie um cômodo e faça login para criar uma cena.">
+                        <i class="fas fa-plus"></i> Criar Cena
+                    </button>
+                </div>
+                <div id="cenas-list"></div>
+            </section>
+
+            <section id="view-room-details" class="view hidden">
+                <div class="view-header">
+                    <button class="btn-back-to-dashboard btn-primary"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</button>
+                    <h2 id="room-details-name"></h2>
+                </div>
+                <div class="view-header">
+                    <h3>Dispositivos neste Cômodo</h3>
+                    <button id="btn-show-link-device-modal" class="btn-primary" disabled><i class="fas fa-plus"></i> Vincular Dispositivo</button>
+                </div>
+                <div id="devices-grid" class="grid-container"></div>
+                <hr>
+                <div class="view-header">
+                    <h3>Cenas Relacionadas</h3>
+                    <button id="btn-create-scene-from-room" class="btn-primary"><i class="fas fa-plus"></i> Criar Cena</button>
+                </div>
+                <p class="subtitle">Mostrando cenas que controlam dispositivos neste cômodo.</p>
+                <div id="related-scenes-list"></div>
+            </section>
+
+            <section id="view-scene-editor" class="view hidden">
+                <div class="view-header">
+                    <button class="btn-back-to-dashboard btn-primary"><i class="fas fa-arrow-left"></i> Voltar</button>
+                    <h2 id="scene-editor-title">Criar Nova Cena</h2>
+                </div>
+                <form id="form-scene" class="scene-editor-form">
+                    <input type="hidden" id="input-scene-id">
+                    <div class="form-group">
+                        <label for="input-scene-name">Nome da Cena</label>
+                        <input type="text" id="input-scene-name" placeholder="Ex: Noite de Cinema" required>
+                    </div>
+                    <div id="scene-actions-list" class="actions-list"><h3>Sequência de Ações</h3></div>
+                    <div class="editor-actions">
+                        <button type="button" id="btn-add-action" class="btn-primary"><i class="fas fa-plus"></i> Adicionar Ação</button>
+                        <button type="submit" id="btn-save-scene" class="btn-primary"><i class="fas fa-save"></i> Salvar Cena</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-backdrop" class="hidden">
+        
+        <div id="modal-comodo" class="modal hidden">
+            <h3 id="modal-comodo-title">Adicionar Novo Cômodo</h3>
+            <form id="form-comodo">
+                <input type="hidden" id="input-comodo-id">
+                <input type="text" id="input-comodo-name" placeholder="Ex: Sala de Jantar" required>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary btn-cancel-modal">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="modal-create-scene" class="modal hidden">
+            <h3>Criar Nova Cena</h3>
+            <form id="form-create-scene">
+                <div class="form-group">
+                    <label for="input-scene-name-modal">Nome da Cena</label>
+                    <input type="text" id="input-scene-name-modal" placeholder="Ex: Luzes de Leitura" required>
+                </div>
+                <div class="form-group">
+                    <label for="input-scene-code-modal">Código de Ativação</label>
+                    <input type="text" id="input-scene-code-modal" placeholder="Ex: 1234" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Incluir Dispositivos do Cômodo</label>
+                    <div id="scene-devices-list-modal" class="relocacao-list">
+                        </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel-modal btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Cena</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="modal-add-device-to-room" class="modal hidden">
+            <h3>Vincular Dispositivos ao Cômodo</h3>
+            <form id="form-add-device-to-room">
+                <p class="confirmation-text">
+                    Selecione os dispositivos não alocados que você deseja adicionar a este cômodo.
+                </p>
+                
+                <div id="unallocated-devices-list" class="relocacao-list">
+                    </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel-modal btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Vincular Selecionados</button>
+                </div>
+            </form>
+        </div>
+        <div id="modal-device" class="modal hidden">
+            <h3 id="modal-device-title">Adicionar Novo Dispositivo</h3>
+            <form id="form-device">
+                <input type="hidden" id="input-device-id">
+                <input type="text" id="input-device-name" placeholder="Ex: Lâmpada de Leitura" required>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary btn-cancel-modal">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+        <div id="modal-confirmation" class="modal hidden">
+            <h3 id="confirmation-title">Confirmar Ação</h3>
+            <p id="confirmation-message" class="confirmation-text"></p>
+            <div class="modal-actions">
+                <button type="button" id="btn-cancel-confirmation" class="btn-secondary">Cancelar</button>
+                <button type="button" id="btn-confirm-action" class="btn-danger">Confirmar</button>
+            </div>
+        </div>
+        <div id="modal-about" class="modal hidden">
+            <h3>Sobre o L.E.M. Home</h3>
+            <p>Este projeto de automação residencial foi desenvolvido com paixão por:</p>
+            <div class="developers-list">
+                <div class="developer-card">
+                    <div class="developer-info">
+                        <h4>Marcos Gabriel</h4>
+                        <p>Desenvolvedor</p>
+                    </div>
+                    <div class="developer-links">
+                        <a href="https://linkedin.com/in/marcosgabrielms4" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/marcosgabrielms" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="developer-card">
+                    <div class="developer-info">
+                        <h4>Enzo Melo</h4>
+                        <p>Desenvolvedor</p>
+                    </div>
+                    <div class="developer-links">
+                        <a href="https://www.linkedin.com/in/enzo-melo-arj" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/EnzoMello" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="developer-card">
+                    <div class="developer-info">
+                        <h4>Lays Emanuelly</h4>
+                        <p>Desenvolvedora</p>
+                    </div>
+                    <div class="developer-links">
+                        <a href="https://www.linkedin.com/in/lays-emanuelly-44a5751a6/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/Luna0812y" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary btn-cancel-modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-notification" class="toast hidden">
+        <i id="toast-icon" class="fas fa-check-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+    
+    <script src="assets/js/app.js" type="module"></script>
+</body>
+</html>

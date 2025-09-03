@@ -1,0 +1,52 @@
+@startuml Diagrama ER - Domótica
+'--- Título ---
+title Diagrama de Entidade e Relacionamento (DER) - Domótica
+
+' --- Aparência e Definições ---
+!define table(x) class x << (T, #ADD1B2) >>
+hide methods
+skinparam {
+    Style strictuml
+    ClassBorderColor #007bff
+    ArrowColor #343a40
+    DefaultFontName "Segoe UI"
+}
+
+' --- Tabelas ---
+table(comodos) {
+  + id_comodo : INTEGER (PK)
+  --
+  nome : VARCHAR
+}
+
+table(dispositivos) {
+  + id_dispositivo : INTEGER (PK)
+  --
+  nome : VARCHAR
+  estado : BOOLEAN
+  # id_comodo : INTEGER (FK)
+}
+
+table(cenas) {
+  + id_cena : INTEGER (PK)
+  --
+  nome : VARCHAR
+  ativa : BOOLEAN
+}
+
+table(acoes) {
+  + id_acao : INTEGER (PK)
+  --
+  ordem : INTEGER
+  intervalo_segundos : INTEGER
+  estado_desejado : BOOLEAN
+  # id_cena : INTEGER (FK)
+  # id_dispositivo : INTEGER (FK)
+}
+
+' --- Relacionamentos ---
+comodos ||--o{ dispositivos
+cenas ||--o{ acoes
+dispositivos ||--o{ acoes
+
+@enduml

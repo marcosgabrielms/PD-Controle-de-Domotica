@@ -1,0 +1,563 @@
+/* --- CONFIGURAÇÕES GLOBAIS E VARIÁVEIS --- */
+:root {
+    --primary-color: #007bff;
+    --primary-hover-color: #0056b3;
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --content-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #334155;
+    --border-color: #e2e8f0;
+    --shadow-color: rgba(0,0,0,0.05);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--content-bg);
+    color: var(--text-color);
+}
+
+/* --- LAYOUT PRINCIPAL E CABEÇALHO --- */
+.main-header {
+    background-color: var(--card-bg);
+    padding: 0 30px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header-logo h1 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin: 0;
+}
+.header-logo i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.main-nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.main-nav .nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 5px;
+    gap: 5px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nav-menu a:hover {
+    background-color: #e2e8f0;
+}
+
+.nav-menu a.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+.nav-menu a.active:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.nav-item-hidden {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width 0.4s ease-in-out, opacity 0.2s ease-in;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.nav-item-hidden a {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.nav-item-visible {
+    max-width: 200px;
+    opacity: 1;
+    transition: max-width 0.4s ease-in-out, opacity 0.5s ease-in-out 0.1s;
+}
+
+.header-user-actions .login-control {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+.status-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+.status-icon.logged-out { background-color: var(--danger-color); }
+.status-icon.logged-in { background-color: var(--success-color); }
+
+.content {
+    padding: 2rem;
+    margin-top: 70px;
+}
+
+/* --- ESTILOS DO CONTEÚDO --- */
+.view { display: block; }
+.hidden { display: none !important; }
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2rem 0;
+}
+
+.view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+.view-header h2, .view-header h3 {
+    margin: 0;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px var(--shadow-color);
+}
+.card-body { padding: 1.5rem; flex-grow: 1; }
+.card-title { font-weight: 600; margin: 0 0 1rem 0; font-size: 1.25rem; }
+
+.card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-weight: 500;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+.card-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.scene-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-bg);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.scene-item-name { font-weight: 500; }
+.scene-item-actions { display: flex; align-items: center; gap: 1rem; }
+
+/* --- COMPONENTES (BOTÕES, ETC.) --- */
+button {
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s, opacity 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
+}
+
+.btn-danger { background-color: var(--danger-color); color: white; }
+.btn-icon { background: none; color: #64748b; padding: 0.5rem; border: none; }
+.btn-icon:hover { color: var(--text-color); }
+
+/* --- NOVAS CLASSES DE COR PARA TEXTO DE BOTÃO --- */
+.btn-icon.btn-text-primary {
+    color: var(--primary-color);
+}
+.btn-icon.btn-text-primary:hover {
+    color: var(--primary-hover-color);
+}
+.btn-icon.btn-text-danger {
+    color: var(--danger-color);
+}
+/* Mantém a cor vermelha no hover */
+.btn-icon.btn-text-danger:hover {
+    color: var(--danger-color);
+    opacity: 0.8;
+}
+
+
+button:disabled { background-color: #94a3b8; border-color: #94a3b8; cursor: not-allowed; opacity: 0.7; color: white; }
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+.btn-secondary:hover {
+    background-color: var(--content-bg);
+}
+
+/* --- CARROSSEL --- */
+.carousel-section { margin-top: 2rem; }
+.carousel-section h3 { margin-bottom: 1rem; }
+.carousel-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+}
+.carousel-container::-webkit-scrollbar { height: 8px; }
+.carousel-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.carousel-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+.carousel-container::-webkit-scrollbar-thumb:hover { background: #aaa; }
+.device-carousel-card {
+    flex: 0 0 220px;
+    width: 220px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+}
+.device-carousel-card .card-body { 
+    padding: 1rem; 
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo do card do carrossel */
+}
+.device-carousel-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    text-align: center; /* Centraliza o título */
+}
+.device-carousel-card .info-row {
+    display: flex;
+    justify-content: center; /* Centraliza a info do cômodo */
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    gap: 5px;
+    width: 100%;
+}
+.device-carousel-card .card-actions {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center; /* Centraliza o switch */
+}
+.device-status {
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px; 
+    font-size: 0.8rem;
+    color: white;
+}
+.device-status.on { background-color: var(--success-color); }
+.device-status.off { background-color: #64748b; }
+.empty-state-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+    color: #64748b;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+/* --- EDITOR DE CENAS --- */
+.scene-editor-form {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+.action-card {
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* --- DETALHES DO CÔMODO --- */
+.device-card-details {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.device-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.device-card-header .device-name {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--text-color);
+}
+
+.device-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000; 
+    
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.04);
+    border-left: 5px solid var(--success-color); 
+    
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+    /* Lógica da Animação */
+    transform: translateX(120%); 
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.5s ease, opacity 0.5s ease, visibility 0.5s;
+}
+
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.toast .fas {
+    font-size: 1.5rem;
+}
+
+.toast.success {
+    border-left-color: var(--success-color);
+}
+.toast.success .fas { 
+    color: var(--success-color); 
+}
+
+.toast.error {
+    border-left-color: var(--danger-color);
+}
+.toast.error .fas { 
+    color: var(--danger-color); 
+}
+
+/* --- MODAIS E FORMULÁRIOS --- */
+#modal-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1010; 
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+#modal-backdrop:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+}
+.modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+#modal-backdrop:not(.hidden) .modal:not(.hidden) { transform: scale(1); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--success-color); }
+input:checked + .slider:before { transform: translateX(20px); }
+input, select { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 5px; font-size: 1rem; width: 100%; }
+
+/* --- MODAL 'SOBRE' --- */
+.developers-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.developer-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--content-bg);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.developer-info {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+.developer-card h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+.developer-card p {
+    margin: 0;
+    color: #64748b;
+}
+.developer-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    margin-left: 15px;
+    transition: color 0.2s;
+}
+.developer-links a:hover {
+    color: var(--primary-color);
+}
+
+/* --- ESTILOS PARA ÍCONES DE DISPOSITIVO --- */
+.device-icon-container {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Deixa o fundo redondo */
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.device-icon-container img {
+    width: 32px; /* Ajuste o tamanho do ícone como preferir */
+    height: 32px;
+}
+
+/* Efeito para Dispositivo LIGADO */
+.device-icon-container.on {
+    background-color: rgba(40, 167, 69, 0.15); /* Fundo verde bem claro */
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.7); /* Efeito de brilho (glow) verde */
+}
+
+/* Efeito para Dispositivo DESLIGADO */
+.device-icon-container.off {
+    background-color: #e2e8f0; /* Fundo cinza */
+    box-shadow: none; /* Sem brilho */
+}
+
+/* Ajuste no card de detalhes do cômodo para incluir o ícone */
+.device-card-details .device-card-body {
+    flex-direction: column; /* Empilha o ícone, status e o switch */
+    align-items: center;
+    gap: 1rem;
+}
