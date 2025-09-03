@@ -25,7 +25,7 @@ export const cenasApi = {
         const response = await fetch(`${API_URL}/scenes/${id}/activate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code_active: String }) 
+            body: JSON.stringify({ code_active: "1234" }) 
         });
         return await response.json();
     },
@@ -41,7 +41,7 @@ export const cenasApi = {
         };
 
         if (endpoint === 'activate') {
-            fetchOptions.body = JSON.stringify({ code_active: String });
+            fetchOptions.body = JSON.stringify({ code_active: "1234" });
         }
 
         const response = await fetch(url, fetchOptions);

@@ -216,6 +216,8 @@ hr {
 .scene-item-name { font-weight: 500; }
 .scene-item-actions { display: flex; align-items: center; gap: 1rem; }
 
+
+
 /* --- COMPONENTES (BOTÕES, ETC.) --- */
 button {
     cursor: pointer;

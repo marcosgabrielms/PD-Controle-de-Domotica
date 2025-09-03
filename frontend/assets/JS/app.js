@@ -1,4 +1,4 @@
-// Módulo principal, que gerencia a aplicação e lida com eventos
+
 
 import api from './api/index.js';
 import {
