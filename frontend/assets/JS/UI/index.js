@@ -10,3 +10,8 @@ export { showModal, hideModals, showConfirmationModal } from './modals.js';
 export { renderDashboard } from './dashboard.js';
 export { renderRoomDetails } from './roomDetails.js';
 export { renderSceneEditor, addActionToDOM } from './sceneEditor.js';
+export { renderAddDeviceToRoomModal } from './linkDeviceModal.js';
+export { showToast } from './notifications.js';
+export { renderCreateSceneModal } from './createSceneModal.js';
+
+

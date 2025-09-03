@@ -1,123 +1,87 @@
-from typing import List
-from app.schemas.scene import SceneResponse
-from app.schemas.device import DeviceResponse
-from app.schemas.room import RoomResponse
-import asyncio
-
-scenes_db: List[SceneResponse] = []
-rooms_db: List[RoomResponse] = []
+from typing import List, Optional
+from app.schemas.scene import SceneCreate
+from sqlalchemy.orm import joinedload
+from app.models.device import Device
+from sqlalchemy.orm import Session
+from app.models.scene import Scene
+from app.models.room import Room
 
 class SceneService:
-
     @staticmethod
-    def create_scene(room: RoomResponse, scene_name: str, devices: List[DeviceResponse], code_active: str) -> SceneResponse:
-        """
-        Cria uma cena dentro de um cômodo com os dispositivos selecionados.
-        Garante que o código de ativação seja único.
-        """
-
+    def create_scene(db: Session, room: Room, scene_create: SceneCreate) -> Scene:
+        devices = db.query(Device).filter(Device.id.in_(scene_create.device_ids)).all()
         if not devices:
-            raise ValueError("Uma cena precisa ter pelo menos um dispositivo conectado ao cômodo")
-
-        # Garante que todos os dispositivos pertencem ao cômodo
-        for d in devices:
-            if d not in room.devices:
-                raise ValueError(f"Dispositivo {d.name} não pertence ao cômodo {room.name}")
-
-        # Verifica unicidade do código
-        if any(scene.code_active == code_active for scene in scenes_db):
-            raise ValueError(f"O código '{code_active}' já está em uso por outra cena")
-
-        # Evita nomes duplicados no mesmo cômodo
-        if any(scene.name == scene_name for scene in room.scenes):
-            raise ValueError(f"Já existe uma cena com o nome '{scene_name}' neste cômodo")
-
-        new_scene = SceneResponse(
-            id=len(scenes_db) + 1,
-            name=scene_name,
-            devices=devices,
-            code_active=code_active,
-            active=False
+            raise ValueError("Nenhum dispositivo válido encontrado para a cena")
+        new_scene = Scene(
+            name=scene_create.scene_name,  # <- pega do Pydantic
+            code_active=scene_create.code_active,
+            active=False,
+            room_id=room.id
         )
-
-        # Salva em memória
-        scenes_db.append(new_scene)
-        room.scenes.append(new_scene)
-
+        new_scene.devices = devices
+        db.add(new_scene)
+        db.commit()
+        db.refresh(new_scene)
         return new_scene
-    
-    @staticmethod
-    def add_devices_to_scene(scene: SceneResponse, device_ids: List[int]) -> SceneResponse:
-        for device_id in device_ids:
-            # Verifica se já existe
-            if any(d.id == device_id for d in scene.devices):
-                raise ValueError(f"Dispositivo {device_id} já está na cena")
-            
-            # Busca dispositivo globalmente
-            device = next((d for room in rooms_db for d in room.devices if d.id == device_id), None)
-            if not device:
-                raise ValueError(f"Dispositivo {device_id} não encontrado em nenhum cômodo")
-            
-            # Verifica se pertence ao cômodo da cena
-            room = next((r for r in rooms_db if scene in r.scenes), None)
-            if not room or device not in room.devices:
-                raise ValueError(f"Dispositivo {device_id} não pertence ao cômodo da cena")
-            
-            scene.devices.append(device)
-        return scene
-    
-    @staticmethod
-    def remove_devices_from_scene(scene: SceneResponse, device_ids: List[int]) -> dict:
-        removed_any = False
-        for device_id in device_ids:
-            device = next((d for d in scene.devices if d.id == device_id), None)
-            if not device:
-                raise ValueError(f"Dispositivo {device_id} não está na cena")
-            scene.devices.remove(device)
-            removed_any = True
-
-        if not removed_any:
-            raise ValueError("Nenhum dispositivo foi removido")
-
-        # Se cena ficou vazia → deletar
-        if len(scene.devices) == 0:
-            scenes_db.remove(scene)
-            room = next((r for r in rooms_db if scene in r.scenes), None)
-            if room:
-                room.scenes.remove(scene)
-            return {"message": "Cena excluída porque não havia mais dispositivos"}
         
-        return {"message": "Dispositivos removidos da cena com sucesso", "scene": scene}
-
     @staticmethod
-    async def activate_scene(scene_id: int, code_active: str) -> bool:
-        """
-        Ativa todos os dispositivos de uma cena com intervalo de 3 segundos entre ativações.
-        """
-        scene = next((s for s in scenes_db if s.id == scene_id), None)
+    def add_devices_to_scene(scene: Scene, device_ids: List[int], db: Session) -> Scene:
+        devices = db.query(Device).filter(Device.id.in_(device_ids)).all()
+        for device in devices:
+            if device not in scene.devices:
+                scene.devices.append(device)
+        db.commit()
+        db.refresh(scene)
+        return scene
+
+    # Remove dispositivos
+    @staticmethod
+    def remove_devices_from_scene(scene: Scene, device_ids: List[int], db: Session) -> Optional[Scene]:
+        scene.devices = [d for d in scene.devices if d.id not in device_ids]
+
+        if not scene.devices:
+            db.delete(scene)
+            db.commit()
+            return None  # cena deletada
+
+        db.commit()
+        db.refresh(scene)
+        return scene
+
+    # Ativar cena e dispositivos vinculados
+    @staticmethod
+    def activate_scene(scene_id: int, db: Session) -> bool:
+        scene = db.query(Scene).options(joinedload(Scene.devices)).filter(Scene.id == scene_id).first()
         if not scene:
             raise ValueError("Cena não encontrada")
 
-        if scene.code_active != code_active:
-            raise ValueError("Código incorreto")
-
-        for index, device in enumerate(scene.devices):
-            device.active = True
-            print(f"[{device.name}] ativado.")
-            if index < len(scene.devices) - 1:  # só espera se não for o último
-                await asyncio.sleep(3)
-
-        scene.active = True  # Atualiza status da cena
+        scene.active = True
+        for device in scene.devices:
+            device.active = True  
+        db.commit()  
+        db.refresh(scene)
         return True
 
     @staticmethod
-    def deactivate_scene(scene_id: int) -> bool:
-        scene = next((s for s in scenes_db if s.id == scene_id), None)
+    def deactivate_scene(scene_id: int, db: Session) -> bool:
+        scene = db.query(Scene).options(joinedload(Scene.devices)).filter(Scene.id == scene_id).first()
         if not scene:
             raise ValueError("Cena não encontrada")
-
-        for device in scene.devices:
-            device.active = False
 
         scene.active = False
+        for device in scene.devices:
+            device.active = False  
+        db.commit()
+        db.refresh(scene)
         return True
+
+    @staticmethod
+    def get_scene(scene_id: int, db: Session) -> Scene:
+        scene = db.query(Scene).filter(Scene.id == scene_id).first()
+        if not scene:
+            raise ValueError("Cena não encontrada")
+        return scene
+
+    @staticmethod
+    def list_scenes(db: Session) -> List[Scene]:
+        return db.query(Scene).all()

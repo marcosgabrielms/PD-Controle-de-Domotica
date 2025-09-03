@@ -1,16 +1,16 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field, field_validator
 from app.schemas.device import DeviceResponse
 
 class SceneCreate(BaseModel):
-    name: str = Field(..., example="Cena Iluminação")
-    devices: List[DeviceResponse]  # Obrigatório: pelo menos um dispositivo
+    scene_name: str
+    device_ids: List[int]
     code_active: str
 
 class SceneResponse(BaseModel):
     id: int
-    name: str = Field(..., example="Cena Iluminação")
-    devices: List[DeviceResponse]  # Pelo menos um dispositivo
+    name: str
+    devices: Optional[List[DeviceResponse]] = []  # <- permite vazio
     active: bool = False
     code_active: str
 

@@ -6,8 +6,12 @@ import {
     renderRoomDetails,
     renderSceneEditor,
     showModal,
+    showToast,
     hideModals,
-    showConfirmationModal
+    showConfirmationModal,
+    renderCreateSceneModal,
+    renderAddDeviceToRoomModal 
+
 } from './ui/index.js';
 
 let currentRoomId = null;
@@ -16,8 +20,11 @@ let usuarioLogado = false;
 const formComodo = document.getElementById('form-comodo');
 const formDevice = document.getElementById('form-device');
 const formScene = document.getElementById('form-scene');
+const formAddDeviceToRoom = document.getElementById('form-add-device-to-room');
 const menuToggle = document.getElementById('nav-menu-toggle');
 const navMenuContainer = document.getElementById('nav-menu-container');
+const formCreateScene = document.getElementById('form-create-scene');
+
 
 if (menuToggle) {
     menuToggle.addEventListener('click', (e) => {
@@ -27,8 +34,7 @@ if (menuToggle) {
     });
 }
 
-// --- MUDANÇA NO EVENT LISTENER ---
-// Usamos um listener para 'change' e um para 'click' para cobrir tudo
+// usa um listener para 'change' e um para 'click' para cobrir tudo
 document.body.addEventListener('change', async (e) => {
     const target = e.target;
     if (!target) return;
@@ -43,6 +49,67 @@ document.body.addEventListener('change', async (e) => {
 
 document.body.addEventListener('click', async (e) => {
     const target = e.target.closest('button, a, .card-link, input.toggle-scene-active');
+    const inputTarget = e.target.closest('input.toggle-device-switch');
+    const toggleInput = e.target.closest('input.toggle-scene-active');
+
+
+
+    if (target.matches('#btn-create-scene-from-room')) {
+        // Busca o cômodo atual para pegar a lista de dispositivos
+        const comodo = await api.getComodoById(currentRoomId);
+        if (comodo && comodo.devices) {
+            renderCreateSceneModal(comodo.devices);
+        }
+    }
+    
+    if (toggleInput) {
+        const sceneId = parseInt(toggleInput.dataset.sceneId);
+        const currentState = toggleInput.dataset.currentState === 'true'; 
+        
+        await api.toggleSceneActiveState(sceneId, currentState);
+        refreshCurrentView(); // Recarrega a tela para mostrar o novo estado
+    }
+
+    if (!target && !inputTarget) return; 
+
+    // Lógica para clique no switch do carrosel
+    if (inputTarget && inputTarget.matches('.toggle-device-switch')) {
+        const deviceId = parseInt(inputTarget.dataset.deviceId);
+        await api.toggleDispositivoState(deviceId);
+        refreshCurrentView();
+        return;
+    }
+
+    if (target.matches('.btn-toggle-device')) {
+        const deviceId = parseInt(target.dataset.deviceId);
+        await api.toggleDispositivoState(deviceId);
+        refreshCurrentView();
+        return;
+    }
+
+        if (target.matches('#btn-show-link-device-modal')) {
+        // Chama a função da UI que vai buscar os dispositivos órfãos e montar o modal
+            renderAddDeviceToRoomModal(currentRoomId); 
+        }
+
+    const formAddDeviceToRoom = document.getElementById('form-add-device-to-room');
+    formAddDeviceToRoom.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const selectedIds = [];
+        document.querySelectorAll('#unallocated-devices-list input:checked').forEach(input => {
+            selectedIds.push(parseInt(input.value));
+    });
+
+        if (selectedIds.length > 0) {
+            await api.addDevicesToRoom(currentRoomId, selectedIds);
+            showToast('Dispositivos vinculados com sucesso!');
+        }
+        
+        hideModals();
+        // Recarrega a tela de detalhes do cômodo para mostrar os novos dispositivos
+        renderRoomDetails(currentRoomId, usuarioLogado);
+});
+
     if (!target) return;
 
     if (target.matches('#nav-dashboard-link')) {
@@ -70,7 +137,7 @@ document.body.addEventListener('click', async (e) => {
     } else if (target.matches('.btn-edit-comodo')) {
         const comodo = await api.getComodoById(parseInt(target.dataset.comodoId));
         document.getElementById('input-comodo-id').value = comodo.id;
-        document.getElementById('input-comodo-name').value = comodo.nome;
+        document.getElementById('input-comodo-name').value = comodo.name;
         document.getElementById('modal-comodo-title').textContent = 'Editar Cômodo';
         showModal(document.getElementById('modal-comodo'));
     } else if (target.matches('.btn-delete-comodo')) {
@@ -93,10 +160,8 @@ document.body.addEventListener('click', async (e) => {
         await api.executeScene(parseInt(target.dataset.sceneId));
         alert('Cena executada!');
         refreshCurrentView();
-    } else if (target.matches('.toggle-scene-active')) {
-        await api.toggleSceneActiveState(parseInt(target.dataset.sceneId));
-        renderDashboard(usuarioLogado);
-    }
+    } 
+    
 
     if (target.matches('#btn-create-scene-from-room')) {
         renderSceneEditor(null, currentRoomId, usuarioLogado);
@@ -149,6 +214,49 @@ formScene.addEventListener('submit', async (e) => {
     await api.saveScene(sceneData);
     renderDashboard(usuarioLogado);
 });
+
+formAddDeviceToRoom.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const selectedIds = [];
+    document.querySelectorAll('#unallocated-devices-list input:checked').forEach(input => {
+        selectedIds.push(parseInt(input.value));
+    });
+
+    if (selectedIds.length > 0) {
+        await api.addDevicesToRoom(currentRoomId, selectedIds);
+        showToast('Dispositivos vinculados com sucesso!');
+    }
+    
+    hideModals();
+    renderRoomDetails(currentRoomId, usuarioLogado);
+});
+
+// Formulário para criação de cena
+formCreateScene.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const sceneName = document.getElementById('input-scene-name-modal').value.trim();
+    const codeActive = document.getElementById('input-scene-code-modal').value.trim();
+    const selectedDeviceIds = [];
+    document.querySelectorAll('#scene-devices-list-modal input:checked').forEach(input => {
+        selectedDeviceIds.push(parseInt(input.value));
+    });
+
+    if (!sceneName || !codeActive) {
+        return alert('Por favor, preencha o nome da cena e o código de ativação.');
+    }
+    if (selectedDeviceIds.length === 0) {
+        return alert('Por favor, selecione ao menos um dispositivo para a cena.');
+    }
+
+    await api.createSceneInRoom(currentRoomId, sceneName, selectedDeviceIds, codeActive);
+
+    showToast('Cena criada com sucesso!');
+    hideModals();
+
+    renderRoomDetails(currentRoomId, usuarioLogado);
+});
+
 
 function refreshCurrentView() {
     const activeView = document.querySelector('.view:not(.hidden)');

@@ -42,7 +42,55 @@ pip install -r requirements.txt
 
 ## **3️⃣ Configurar o banco de dados PostgreSQL**
 
+<<<<<<< HEAD
+Aqui está um exemplo de sessão de conexão com o banco de dados para colocar no `README`, usando apenas comandos:
+
+---
+
+### **Configuração do Banco de Dados PostgreSQL**
+
+1. **Crie o arquivo `.env`** na raiz do projeto (fora de app) com as variáveis de ambiente:
+
+```
+DB_USER=postgres
+DB_PASSWORD=senha_do_postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=intelligence_home
+```
+
+2. **Abra o terminal do PostgreSQL:**
+
+```bash
+psql -U postgres
+```
+
+3. **Crie o banco de dados:**
+
+```sql
+CREATE DATABASE intelligence_home;
+```
+
+4. **Verifique se o banco foi criado:**
+
+```sql
+\l
+```
+
+5. **Saia do PostgreSQL:**
+
+```sql
+\q
+```
+
+6. **Rode as migrations ou crie as tabelas usando o SQLAlchemy (ou comando equivalente do seu projeto):**
+
+```bash
+python -m app.database
+```
+=======
 1. Em construção
+>>>>>>> c49effb5a8eb7d244a068ccfcdafad00369f6f15
 
 ## **4️⃣ Rodar a API**
 
@@ -96,8 +144,14 @@ fastapi dev main.py
 
 ---
 
+<<<<<<< HEAD
 ## ** Rotas da API**
 
+=======
+## ** Rotas da API **
+
+```
+>>>>>>> c49effb5a8eb7d244a068ccfcdafad00369f6f15
 SmartHome API
  ├── Users
  │    ├── POST /users/ (Create User)
@@ -120,3 +174,7 @@ SmartHome API
       ├── GET /devices/ (List Devices)
       ├── POST /devices/{device_id}/toggle (Toggle Device)
       └── DELETE /devices/{device_id} (Remove Device)
+<<<<<<< HEAD
+=======
+```
+>>>>>>> c49effb5a8eb7d244a068ccfcdafad00369f6f15

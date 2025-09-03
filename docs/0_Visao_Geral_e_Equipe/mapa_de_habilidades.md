@@ -1,6 +1,6 @@
 # Mapa de Habilidades da Equipe
 
-Este documento detalha o nível de conhecimento técnico de cada membro da equipe para o projeto de Controle de Domótica. O objetivo é facilitar a distribuição de tarefas, identificar pontos de apoio e promover o aprendemento colaborativo.
+Este documento detalha o nível de conhecimento técnico de cada membro da equipe para o projeto de Controle de Domótica. O objetivo é facilitar a distribuição de tarefas, identificar pontos de apoio e promover o aprendizado colaborativo.
 
 **Equipe:**
 * Marcos Gabriel
@@ -11,18 +11,27 @@ Este documento detalha o nível de conhecimento técnico de cada membro da equip
 
 ## Tabela de Habilidades
 
-| Habilidade | Tecnologia | Marcos Gabriel | Enzo Melo | Lays Emanuelly |
+| Categoria | Tecnologia | Marcos Gabriel | Enzo Melo | Lays Emanuelly |
 | :--- | :--- | :--- | :--- | :--- |
-| **Frontend** | HTML, CSS, JavaScript | `Bom Domínio` | `Fluente*` | `A Dominar` |
-| **Frontend (Framework)** | React.js | `A Dominar` | `Fluente*` | `A Dominar` |
-| **Backend** | Python, FastAPI | `A Dominar` | `Bom Domínio` | `Bom Domínio` |
-| **Banco de Dados** | PostgreSQL | `A Dominar` | `A Dominar` | `Bom Domínio` |
+| **Linguagens** | HTML / CSS | `Bom Domínio` | `Bom Domínio` | `Bom Domínio` |
+| | JavaScript | `Bom Domínio` | `Bom Domínio` | `Bom Domínio` |
+| | Python | `Bom Domínio` | `Bom Domínio` | `Bom Domínio` |
+| | Java / Typescript | `A Dominar/A Dominar` | `Bom Domínio` | `Bom Domínio` |
+| | C / C++ | `Bom Domínio ` | `Bom Domínio` | `Bom Domínio` |
+| **Frameworks** | React.js | `A Dominar` | `Básico` | `A Dominar` |
+| | Next.js | - | - | `A Dominar` |
+| | FastAPI | `A Dominar` | `Bom Domínio` | `Bom Domínio` |
+| | Flask | `A Dominar` | - | `Bom Domínio` |
+| | Flutter | - | - | `Bom Domínio` |
+| **Banco de Dados**| PostgreSQL | `A Dominar` | `Bom Domínio` | `Bom Domínio` |
 | **Controle de Versão** | Git / GitHub | `Bom Domínio` | `Bom Domínio` | `Bom Domínio` |
+
 
 ---
 
 ### Legenda da Escala:
-* **A Dominar:** Conhecimento básico/iniciante, em processo de aprendizagem.
+* **Básico:** Conhecimento inicial, consegue executar tarefas com supervisão.
+* **A Dominar:** Conhecimento em processo de aprendizagem, busca autonomia.
 * **Bom Domínio:** Consegue desenvolver tarefas de forma autônoma.
 * **Fluente***: Além de dominar, consegue ensinar e guiar os outros membros.
 
@@ -30,6 +39,6 @@ Este documento detalha o nível de conhecimento técnico de cada membro da equip
 
 ### Observações e Estratégia da Equipe
 
-1.  **Tecnologia do Frontend:** Conforme a sugestão do Enzo, a equipe optou por utilizar **HTML, CSS e JavaScript puros** no frontend. Essa decisão visa garantir a participação ativa de todos os membros, especialmente do Marcos, na construção da interface.
-2.  **Forças da Equipe:** O time possui uma forte base de frontend com a fluência do Enzo e uma sólida base de backend e banco de dados com o domínio da Lays.
-3.  **Oportunidades de Aprendizado:** Esta é uma ótima oportunidade para o Marcos desenvolver suas habilidades de backend, contando com o apoio direto da Lays e do Enzo. A Lays pode guiar a estruturação da API com FastAPI e a conexão com o PostgreSQL, enquanto o Marcos e o Enzo podem colaborar na implementação dos endpoints.
+1.  **Tecnologia do Frontend:** A equipe optou por utilizar **HTML, CSS e JavaScript puros** no frontend. Essa decisão visa nivelar a participação de todos os membros na construção da interface, dado o conhecimento variado na área.
+2.  **Forças da Equipe:** O time possui uma base sólida e equilibrada em backend, com todos os membros tendo bom domínio em Python. Lays se destaca com um conhecimento abrangente em múltiplos frameworks, incluindo FastAPI, Flask, Flutter e Next.js.
+3.  **Oportunidades de Aprendizado:** O projeto serve como uma excelente oportunidade para todos aprimorarem suas habilidades. A equipe pode colaborar na implementação dos endpoints, com Lays guiando a estruturação da API e a conexão com o PostgreSQL, enquanto Marcos e Enzo contribuem com suas habilidades em Python. Marcos, especificamente, tem a oportunidade de evoluir seu conhecimento em Flask com o apoio da equipe.
