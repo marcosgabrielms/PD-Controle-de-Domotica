@@ -96,9 +96,9 @@ fastapi dev main.py
 
 ---
 
-## ** Rotas da API**
+## ** Rotas da API **
 
-´´´
+```
 SmartHome API
  ├── Users
  │    ├── POST /users/ (Create User)
@@ -121,4 +121,4 @@ SmartHome API
       ├── GET /devices/ (List Devices)
       ├── POST /devices/{device_id}/toggle (Toggle Device)
       └── DELETE /devices/{device_id} (Remove Device)
-´´´
+```
