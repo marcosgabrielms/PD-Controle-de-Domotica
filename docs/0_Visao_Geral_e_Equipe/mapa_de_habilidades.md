@@ -15,12 +15,12 @@ Este documento detalha o nível de conhecimento técnico de cada membro da equip
 | :--- | :--- | :--- | :--- | :--- |
 | **Linguagens** | HTML / CSS | `Bom Domínio` | `Bom Domínio` | `Bom Domínio` |
 | | JavaScript | `Bom Domínio` | `Bom Domínio` | `Bom Domínio` |
-| | Python | `Bom Domínio` | `Bom Domínio` | `Bom Domínio` |
-| | Java / Typescript | `A Dominar/A Dominar` | `Bom Domínio` | `Bom Domínio` |
+| | Python | `Bom Domínio` | `Bom Domínio` | `Um pouco de domínio` |
+| | Java / Typescript | `A Dominar/A Dominar` | `Domínio Básico` | `Bom Domínio` |
 | | C / C++ | `Bom Domínio ` | `Bom Domínio` | `Bom Domínio` |
 | **Frameworks** | React.js | `A Dominar` | `Básico` | `A Dominar` |
 | | Next.js | - | - | `A Dominar` |
-| | FastAPI | `A Dominar` | `Bom Domínio` | `Bom Domínio` |
+| | FastAPI | `A Dominar` | `A dominar` | `Bom Domínio` |
 | | Flask | `A Dominar` | - | `Bom Domínio` |
 | | Flutter | - | - | `Bom Domínio` |
 | **Banco de Dados**| PostgreSQL | `A Dominar` | `Bom Domínio` | `Bom Domínio` |
