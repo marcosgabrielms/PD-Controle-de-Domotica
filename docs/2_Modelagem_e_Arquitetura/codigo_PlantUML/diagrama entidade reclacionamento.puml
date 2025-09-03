@@ -1,52 +1,62 @@
-@startuml Diagrama ER - Domótica
-'--- Título ---
+@startuml Diagrama ER - Domótica (Layout Horizontal)
+'--- Título e Estilo ---
 title Diagrama de Entidade e Relacionamento (DER) - Domótica
-
-' --- Aparência e Definições ---
-!define table(x) class x << (T, #ADD1B2) >>
-hide methods
 skinparam {
     Style strictuml
     ClassBorderColor #007bff
     ArrowColor #343a40
     DefaultFontName "Segoe UI"
+    shadowing false
 }
 
-' --- Tabelas ---
-table(comodos) {
-  + id_comodo : INTEGER (PK)
+' --- Diretiva para Layout ---
+left to right direction
+
+' --- Entidades ---
+entity "users" as users {
+  + id : INTEGER (PK)
   --
-  nome : VARCHAR
+  name : VARCHAR
+  age : INTEGER
 }
 
-table(dispositivos) {
-  + id_dispositivo : INTEGER (PK)
+entity "rooms" as rooms {
+  + id : INTEGER (PK)
   --
-  nome : VARCHAR
-  estado : BOOLEAN
-  # id_comodo : INTEGER (FK)
+  name : VARCHAR
 }
 
-table(cenas) {
-  + id_cena : INTEGER (PK)
+entity "devices" as devices {
+  + id : INTEGER (PK)
   --
-  nome : VARCHAR
-  ativa : BOOLEAN
+  name : VARCHAR
+  active : BOOLEAN
+  # room_id : INTEGER (FK)
 }
 
-table(acoes) {
-  + id_acao : INTEGER (PK)
+entity "scenes" as scenes {
+  + id : INTEGER (PK)
   --
-  ordem : INTEGER
-  intervalo_segundos : INTEGER
-  estado_desejado : BOOLEAN
-  # id_cena : INTEGER (FK)
-  # id_dispositivo : INTEGER (FK)
+  name : VARCHAR
+  code_active : VARCHAR
+  active : BOOLEAN
+  # room_id : INTEGER (FK)
 }
 
-' --- Relacionamentos ---
-comodos ||--o{ dispositivos
-cenas ||--o{ acoes
-dispositivos ||--o{ acoes
+' --- Tabela de Associação ---
+entity "scene_devices" as scene_devices {
+  # scene_id : INTEGER (FK)
+  # device_id : INTEGER (FK)
+}
+
+' --- Forçar Quebra de Linha no Layout ---
+users -[hidden]down- scenes
+
+' --- Relacionamentos e Cardinalidade ---
+rooms "1" ||--o{ "0..*" devices
+rooms "1" ||--o{ "0..*" scenes
+
+scenes "1" }o--|| "0..*" scene_devices
+devices "1" }o--|| "0..*" scene_devices
 
 @enduml
