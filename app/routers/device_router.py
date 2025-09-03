@@ -1,0 +1,49 @@
+from fastapi import APIRouter, HTTPException, Body, Depends
+from typing import List
+from sqlalchemy.orm import Session
+from app.schemas.device import DeviceResponse, DeviceCreate, DeviceToggle
+from app.service.device_service import DeviceService
+from app.database import get_db
+
+router = APIRouter(
+    prefix="/devices",
+    tags=["Devices"]
+)
+
+# Criar dispositivo
+@router.post("/", response_model=DeviceResponse)
+def create_device(device: DeviceCreate, db: Session = Depends(get_db)):
+    try:
+        new_device = DeviceService.create_device(device.name, device.room_id, db)
+        return new_device
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# Listar todos dispositivos
+@router.get("/", response_model=List[DeviceResponse])
+def list_devices(db: Session = Depends(get_db)):
+    return DeviceService.list_devices(db)
+
+# Pesquisar dispositivo por ID
+@router.get("/{device_id}", response_model=DeviceResponse)
+def get_device(device_id: int, db: Session = Depends(get_db)):
+    try:
+        return DeviceService.get_device(device_id, db)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+# Atualizar status do dispositivo (ligar/desligar)
+@router.post("/{device_id}/toggle", response_model=DeviceResponse)
+def toggle_device(device_id: int, toggle: DeviceToggle = Body(...), db: Session = Depends(get_db)):
+    try:
+        return DeviceService.toggle_device(device_id, toggle.active, db)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+# Remover dispositivo
+@router.delete("/{device_id}")
+def remove_device(device_id: int, db: Session = Depends(get_db)):
+    try:
+        return DeviceService.delete_device(device_id, db)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
